@@ -3,7 +3,7 @@ package me.laysar.bastionhelper.command;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 
 public class CommandManager {
-	public static void registerCommands() {
+	public static void register() {
 		CommandRegistrationCallback.EVENT.register(HighlightPiglinsCommand::register);
 	}
 }
