@@ -1,4 +1,4 @@
-package me.laysar.bastionhelper.client.event;
+package me.laysar.bastionhelper.client.handler;
 
 import me.laysar.bastionhelper.client.network.ClientEventEmitter;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
