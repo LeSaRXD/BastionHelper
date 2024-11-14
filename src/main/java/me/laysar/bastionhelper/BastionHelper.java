@@ -1,5 +1,6 @@
 package me.laysar.bastionhelper;
 
+import me.laysar.bastionhelper.command.CommandManager;
 import me.laysar.bastionhelper.network.ServerEventReceiver;
 import net.fabricmc.api.ModInitializer;
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +16,7 @@ public class BastionHelper implements ModInitializer {
 		LOGGER.info("Bastion helper initialized!");
 
 		ServerEventReceiver.register();
+		CommandManager.registerCommands();
 	}
 
 }
