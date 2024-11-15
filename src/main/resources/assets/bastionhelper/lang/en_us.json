@@ -1,4 +1,5 @@
 {
 	"key.category.bastionhelper": "Bastion Helper",
-	"key.bastionhelper.highlight_piglins": "Toggle Piglin Highlight"
+	"key.bastionhelper.highlight_piglins": "Toggle Piglin Highlight",
+	"key.bastionhelper.show_piglin_paths": "Toggle Piglin Paths"
 }

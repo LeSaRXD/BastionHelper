@@ -16,6 +16,10 @@ public class BastionHelper implements ModInitializer {
 	public void onInitialize() {
 		LOGGER.info("Bastion helper initialized!");
 
+		registerAll();
+	}
+
+	private void registerAll() {
 		ServerEventReceiver.register();
 		CommandManager.register();
 		EventManager.register();

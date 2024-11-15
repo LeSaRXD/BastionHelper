@@ -21,15 +21,19 @@ public class HighlightPiglinsHandler {
 	}
 
 	public static void highlight(@NotNull PlayerEntity player) {
-		highlightedPiglins = new HashSet<>();
+		if (highlightedPiglins == null)
+			highlightedPiglins = new HashSet<>();
+
 		StatusEffectInstance effect = new StatusEffectInstance(StatusEffects.GLOWING, Integer.MAX_VALUE, 0, true, false);
-		for (PiglinEntity piglin : player.world.getEntities(PiglinEntity.class, player.getBoundingBox().expand(100, 100, 100), (a) -> true)) {
+		for (PiglinEntity piglin : player.world.getEntities(PiglinEntity.class, player.getBoundingBox().expand(100, 100, 100), (_a) -> true)) {
 			highlightedPiglins.add(piglin);
 			piglin.applyStatusEffect(effect);
 		}
 	}
 
 	public static void lowlight() {
+		if (highlightedPiglins == null) return;
+
 		for (PiglinEntity piglin : highlightedPiglins) {
 			piglin.removeStatusEffect(StatusEffects.GLOWING);
 		}
