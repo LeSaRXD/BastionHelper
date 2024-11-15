@@ -4,20 +4,19 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import me.laysar.bastionhelper.handler.HighlightPiglinsHandler;
+import me.laysar.bastionhelper.client.handler.ShowPiglinPathsHandler;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 
-public class HighlightPiglinsCommand {
+public class ShowPiglinPathsCommand {
 	public static void register(CommandDispatcher<ServerCommandSource> dispatcher, boolean _dispatched) {
-		LiteralArgumentBuilder<ServerCommandSource> cmd = CommandManager.literal("highlight").executes(HighlightPiglinsCommand::run);
+		LiteralArgumentBuilder<ServerCommandSource> cmd = CommandManager.literal("pathfinding").executes(ShowPiglinPathsCommand::run);
 		dispatcher.register(cmd);
 	}
 
-	public static int run(CommandContext<ServerCommandSource> ctx) {
+	public static int run(CommandContext<ServerCommandSource> _ctx) {
 		try {
-			HighlightPiglinsHandler.run(ctx.getSource().getPlayer());
+			ShowPiglinPathsHandler.run();
 			return Command.SINGLE_SUCCESS;
 		} catch (Exception e) {
 			return 0;

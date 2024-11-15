@@ -45,7 +45,7 @@ public class KeyInputHandler {
 				if (!client.isInSingleplayer()) return;
 				if (client.player == null || client.world == null) return;
 
-				ShowPiglinPathsHandler.run(client);
+				ShowPiglinPathsHandler.run();
 			}
 		});
 	}

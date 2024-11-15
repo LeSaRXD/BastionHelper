@@ -22,10 +22,7 @@ public class ShowPiglinPathsHandler {
 	private static final RenderGroup<PathRenderer> pathfindingRenderGroup = new RenderGroup<>(10, RenderGroup.RenderOption.FRONT);
 	private static final Map<Integer, PathRenderer> piglinPathRenderers = new HashMap<>();
 
-	public static void run(@NotNull MinecraftClient client) {
-		if (!client.isInSingleplayer()) return;
-		PlayerEntity player = client.player;
-		if (player == null || client.world == null) return;
+	public static void run() {
 		ClientEventEmitter.showPiglinPaths();
 
 		showPaths = !showPaths;
