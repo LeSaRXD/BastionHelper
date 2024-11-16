@@ -11,35 +11,36 @@ import org.jetbrains.annotations.NotNull;
 import static me.laysar.bastionhelper.network.PacketIds.*;
 
 public class ServerEventEmitter {
-	public static void createPiglinPath(@NotNull PlayerEntity player, int id, @NotNull Path path) {
+	public static void createPiglinPath(@NotNull PlayerEntity player, int id, @NotNull Path path, int aggroLevel) {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 
 		buf.writeInt(id);
-
+		buf.writeInt(path.getCurrentNodeIndex());
 		buf.writeInt(path.getLength());
 
 		for (PathNode node : path.getNodes())
 			buf.writeBlockPos(node.getPos());
 		buf.writeBlockPos(path.getTarget());
 
-		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, CREATE_PIGLIN_PATH, buf);
+		buf.writeInt(aggroLevel);
 
-		if (path.getCurrentNodeIndex() > 0) updatePiglinPath(player, id, path.getCurrentNodeIndex());
+		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, CREATE_PIGLIN_PATH, buf);
 	}
 
-	public static void updatePiglinPath(@NotNull PlayerEntity player, int id, int currentNodeIndex) {
+	public static void updatePiglinPath(@NotNull PlayerEntity player, int id, int currentNodeIndex, int aggroLevel) {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 
 		buf.writeInt(id);
 		buf.writeInt(currentNodeIndex);
+		buf.writeInt(aggroLevel);
 
 		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, UPDATE_PIGLIN_PATH, buf);
 	}
 
 	public static void removePiglinPath(@NotNull PlayerEntity player, int id) {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-		buf.writeInt(id);
 
+		buf.writeInt(id);
 		buf.writeInt(-1);
 
 		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, UPDATE_PIGLIN_PATH, buf);

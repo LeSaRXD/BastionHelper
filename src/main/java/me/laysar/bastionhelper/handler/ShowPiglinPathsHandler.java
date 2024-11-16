@@ -11,6 +11,30 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ShowPiglinPathsHandler {
+	public enum PiglinAggroLevel {
+		NONE(0),
+		LIGHT(1),
+		MEDIUM(2),
+		HEAVY(3);
+
+		private final int value;
+		public int toInt() {
+			return this.value;
+		}
+		public static PiglinAggroLevel fromInt(int value) {
+			return switch (value) {
+				case 1 -> LIGHT;
+				case 2 -> MEDIUM;
+				case 3 -> HEAVY;
+				default -> NONE;
+			};
+		}
+
+		private PiglinAggroLevel(int value) {
+			this.value = value;
+		}
+	}
+
 	private static final Map<Integer, Integer> sentNodeIndexes = new HashMap<>();
 	private static PlayerEntity subscribedPlayer = null;
 
@@ -23,23 +47,23 @@ public class ShowPiglinPathsHandler {
 		}
 	}
 
-	public static void newPath(int id, @Nullable Path path) {
-		if (subscribedPlayer == null ||
-				path == null) return;
+	public static void newPath(int id, @Nullable Path path, PiglinAggroLevel aggroLevel) {
+		if (subscribedPlayer == null) return;
+		if (path == null) return;
 
-		ServerEventEmitter.createPiglinPath(subscribedPlayer, id, path);
+		ServerEventEmitter.createPiglinPath(subscribedPlayer, id, path, aggroLevel.toInt());
 		sentNodeIndexes.put(id, path.getCurrentNodeIndex());
 	}
 
-	public static void updatePath(int id, @Nullable Path path) {
+	public static void updatePath(int id, @Nullable Path path, PiglinAggroLevel aggroLevel) {
 		if (subscribedPlayer == null ||
 				path == null) return;
 
 		Integer sentNodeIndex = sentNodeIndexes.get(id);
-		if (sentNodeIndex == null) newPath(id, path);
+		if (sentNodeIndex == null) newPath(id, path, aggroLevel);
 		else if (sentNodeIndex == path.getCurrentNodeIndex()) return;
 
-		ServerEventEmitter.updatePiglinPath(subscribedPlayer, id, path.getCurrentNodeIndex());
+		ServerEventEmitter.updatePiglinPath(subscribedPlayer, id, path.getCurrentNodeIndex(), aggroLevel.toInt());
 		sentNodeIndexes.put(id, path.getCurrentNodeIndex());
 	}
 

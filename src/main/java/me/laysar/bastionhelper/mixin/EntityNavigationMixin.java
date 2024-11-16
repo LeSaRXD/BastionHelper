@@ -1,17 +1,21 @@
 package me.laysar.bastionhelper.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import me.laysar.bastionhelper.BastionHelper;
 import me.laysar.bastionhelper.handler.ShowPiglinPathsHandler;
+import me.laysar.bastionhelper.handler.ShowPiglinPathsHandler.PiglinAggroLevel;
+import net.minecraft.entity.ai.brain.Brain;
+import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.ai.pathing.Path;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PiglinEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -26,7 +30,7 @@ public abstract class EntityNavigationMixin {
 	Path findPathToAny(Path original) {
 		if (!(this.entity instanceof PiglinEntity piglin)) return original;
 
-		ShowPiglinPathsHandler.newPath(piglin.getEntityId(), original);
+		ShowPiglinPathsHandler.newPath(piglin.getEntityId(), original, aggroLevel(piglin));
 		return original;
 	}
 
@@ -35,7 +39,7 @@ public abstract class EntityNavigationMixin {
 	void setCurrentNodeIndex(CallbackInfo ci) {
 		if (!(this.entity instanceof PiglinEntity piglin)) return;
 
-		ShowPiglinPathsHandler.updatePath(piglin.getEntityId(), this.getCurrentPath());
+		ShowPiglinPathsHandler.updatePath(piglin.getEntityId(), this.getCurrentPath(), aggroLevel(piglin));
 	}
 
 	@Inject(method = "stop()V", at = @At("HEAD"))
@@ -43,5 +47,21 @@ public abstract class EntityNavigationMixin {
 		if (!(this.entity instanceof PiglinEntity piglin)) return;
 
 		ShowPiglinPathsHandler.removePath(piglin.getEntityId());
+	}
+
+	@Unique
+	private PiglinAggroLevel aggroLevel(@NotNull PiglinEntity piglin) {
+		Brain<PiglinEntity> brain = piglin.getBrain();
+		boolean lightAnger = brain.hasMemoryModule(MemoryModuleType.NEAREST_TARGETABLE_PLAYER_NOT_WEARING_GOLD);
+		boolean mediumAnger = brain.hasMemoryModule(MemoryModuleType.ANGRY_AT);
+		boolean heavyAnger = mediumAnger && brain
+				.getOptionalMemory(MemoryModuleType.HURT_BY_ENTITY)
+				.map((e) -> e instanceof PlayerEntity)
+				.orElse(false);
+
+		if (heavyAnger) return PiglinAggroLevel.HEAVY;
+		if (mediumAnger) return PiglinAggroLevel.MEDIUM;
+		if (lightAnger) return PiglinAggroLevel.LIGHT;
+		return PiglinAggroLevel.NONE;
 	}
 }

@@ -23,11 +23,11 @@ public abstract class Renderer {
 
 	protected void addVertex(@NotNull BufferBuilder buffer, @NotNull Vec3d pos, @NotNull Color color) {
 		Vec3d cam = this.renderer.getCamera().getPos();
-		float[] colorComp = color.getColorComponents(null);
+		float[] colorComp = color.getComponents(null);
 		buffer.vertex(
 				pos.x - cam.x, pos.y - cam.y, pos.z - cam.z
 		).color(
-				colorComp[0], colorComp[1], colorComp[2], 1.0f
+				colorComp[0], colorComp[1], colorComp[2], colorComp[3]
 		).next();
 	}
 }

@@ -13,16 +13,27 @@ import java.awt.*;
 public class PathRenderer extends Renderer {
 	private final LivingEntity entity;
 	private final BlockPos[] positions;
-	public int currentNodeIndex = 0;
-	private final Color color;
-	private final BlockRenderer targetRenderer;
+	private final BlockPos target;
+	private int currentNodeIndex = 0;
+	private Color color;
+	private BlockRenderer targetRenderer;
 
-	public PathRenderer(@NotNull LivingEntity entity, @NotNull BlockPos[] positions, @NotNull Color color, @NotNull BlockPos target, @NotNull Color targetColor) {
+	public void setCurrentNodeIndex(int value) {
+		currentNodeIndex = value;
+	}
+	public void setColor(Color value) {
+		color = value;
+		targetRenderer = new BlockRenderer(target, this.color);
+	}
+
+	public PathRenderer(@NotNull LivingEntity entity, @NotNull BlockPos[] positions, @NotNull BlockPos target, int currentNodeIndex, @NotNull Color color) {
 		this.entity = entity;
 		this.positions = positions;
+		this.target = target;
 		this.color = color;
+		this.currentNodeIndex = currentNodeIndex;
 
-		this.targetRenderer = new BlockRenderer(target, targetColor);
+		this.targetRenderer = new BlockRenderer(target, this.color);
 	}
 
 	@Override
