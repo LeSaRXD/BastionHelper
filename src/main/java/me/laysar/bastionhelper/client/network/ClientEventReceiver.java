@@ -7,6 +7,7 @@ import static me.laysar.bastionhelper.network.PacketIds.*;
 
 public class ClientEventReceiver {
 	public static void register() {
+		ClientSidePacketRegistry.INSTANCE.register(CREATE_PIGLIN_PATH, ShowPiglinPathsHandler::create);
 		ClientSidePacketRegistry.INSTANCE.register(UPDATE_PIGLIN_PATH, ShowPiglinPathsHandler::update);
 	}
 }

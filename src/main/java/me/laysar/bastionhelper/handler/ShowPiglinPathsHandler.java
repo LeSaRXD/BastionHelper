@@ -24,21 +24,22 @@ public class ShowPiglinPathsHandler {
 	}
 
 	public static void newPath(int id, @Nullable Path path) {
-		if (subscribedPlayer == null) return;
-		if (path == null) return;
+		if (subscribedPlayer == null ||
+				path == null) return;
 
-		ServerEventEmitter.updatePiglinPath(subscribedPlayer, id, path);
+		ServerEventEmitter.createPiglinPath(subscribedPlayer, id, path);
 		sentNodeIndexes.put(id, path.getCurrentNodeIndex());
 	}
 
 	public static void updatePath(int id, @Nullable Path path) {
-		if (subscribedPlayer == null) return;
-		if (path == null) return;
+		if (subscribedPlayer == null ||
+				path == null) return;
 
 		Integer sentNodeIndex = sentNodeIndexes.get(id);
-		if (sentNodeIndex != null && sentNodeIndex == path.getCurrentNodeIndex()) return;
+		if (sentNodeIndex == null) newPath(id, path);
+		else if (sentNodeIndex == path.getCurrentNodeIndex()) return;
 
-		ServerEventEmitter.updatePiglinPath(subscribedPlayer, id, path);
+		ServerEventEmitter.updatePiglinPath(subscribedPlayer, id, path.getCurrentNodeIndex());
 		sentNodeIndexes.put(id, path.getCurrentNodeIndex());
 	}
 

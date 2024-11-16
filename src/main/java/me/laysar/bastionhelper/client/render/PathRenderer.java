@@ -13,6 +13,7 @@ import java.awt.*;
 public class PathRenderer extends Renderer {
 	private final LivingEntity entity;
 	private final BlockPos[] positions;
+	public int currentNodeIndex = 0;
 	private final Color color;
 	private final BlockRenderer targetRenderer;
 
@@ -26,7 +27,7 @@ public class PathRenderer extends Renderer {
 
 	@Override
 	public void render() {
-		if (positions.length == 0) {
+		if (currentNodeIndex + 1 >= positions.length) {
 			targetRenderer.render();
 			return;
 		}
@@ -38,9 +39,9 @@ public class PathRenderer extends Renderer {
 		buffer.begin(DRAW_MODE, VertexFormats.POSITION_COLOR);
 
 		this.addVertex(buffer, entity.getPos().add(0, 0.5, 0), color);
-		this.addVertex(buffer, blockToVec(positions[0]), color);
+		this.addVertex(buffer, blockToVec(positions[currentNodeIndex + 1]), color);
 
-		for (int i = 0; i < positions.length - 1; i++) {
+		for (int i = currentNodeIndex + 1; i < positions.length - 1; i++) {
 			BlockPos from = positions[i],
 					to = positions[i + 1];
 			this.addVertex(buffer, blockToVec(from), color);

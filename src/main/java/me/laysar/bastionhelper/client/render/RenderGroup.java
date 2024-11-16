@@ -1,14 +1,14 @@
 package me.laysar.bastionhelper.client.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.util.Pair;
 
 import java.util.*;
 
 public class RenderGroup<T extends Renderer> extends Renderer {
 	private final int capacity;
-	private final List<T> renderers = new ArrayList<>();
-	private final Set<T> toAdd = new HashSet<>();
-	private final Set<T> toRemove = new HashSet<>();
+	private final Set<T> renderers = new HashSet<>();
+	private final List<Pair<Boolean, T>> queue = new ArrayList<>();
 
 	public enum RenderOption {
 		FRONT,
@@ -39,24 +39,28 @@ public class RenderGroup<T extends Renderer> extends Renderer {
 	}
 
 	public void add(T renderer) {
-		if (renderers.size() >= capacity) return;
-		toAdd.add(renderer);
+		queue.add(new Pair<>(true, renderer));
 	}
 
 	public void remove(T renderer) {
-		toRemove.add(renderer);
+		if (renderer == null) return;
+		queue.add(new Pair<>(false, renderer));
 	}
 
 	private void processQueues() {
-		renderers.addAll(toAdd);
-		toAdd.clear();
-		renderers.removeAll(toRemove);
-		toRemove.clear();
+		for (Pair<Boolean, T> pair : queue) {
+			if (pair.getLeft()) {
+				if (renderers.size() < capacity)
+					renderers.add(pair.getRight());
+			}
+			else
+				renderers.remove(pair.getRight());
+		}
+		queue.clear();
 	}
 
 	public void clear() {
 		renderers.clear();
-		toAdd.clear();
-		toRemove.clear();
+		queue.clear();
 	}
 }
