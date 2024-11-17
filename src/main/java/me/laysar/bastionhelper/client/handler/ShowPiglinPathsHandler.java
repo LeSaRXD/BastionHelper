@@ -109,6 +109,7 @@ public class ShowPiglinPathsHandler {
 			case LIGHT -> Color.YELLOW;
 			case MEDIUM -> Color.ORANGE;
 			case HEAVY -> Color.RED;
+			case GOLD_DISTRACTED -> Color.GREEN;
 		};
 	}
 }

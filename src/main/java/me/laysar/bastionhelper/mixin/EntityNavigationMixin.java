@@ -1,6 +1,7 @@
 package me.laysar.bastionhelper.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import me.laysar.bastionhelper.BastionHelper;
 import me.laysar.bastionhelper.handler.ShowPiglinPathsHandler;
 import me.laysar.bastionhelper.handler.ShowPiglinPathsHandler.PiglinAggroLevel;
 import net.minecraft.entity.ai.brain.Brain;
@@ -30,6 +31,8 @@ public abstract class EntityNavigationMixin {
 	Path findPathToAny(Path original) {
 		if (!(this.entity instanceof PiglinEntity piglin)) return original;
 
+		BastionHelper.LOGGER.info("Here");
+
 		ShowPiglinPathsHandler.newPath(piglin.getEntityId(), original, aggroLevel(piglin));
 		return original;
 	}
@@ -54,12 +57,11 @@ public abstract class EntityNavigationMixin {
 		Brain<PiglinEntity> brain = piglin.getBrain();
 		boolean lightAnger = brain.hasMemoryModule(MemoryModuleType.NEAREST_TARGETABLE_PLAYER_NOT_WEARING_GOLD);
 		boolean mediumAnger = brain.hasMemoryModule(MemoryModuleType.ANGRY_AT);
-		boolean heavyAnger = mediumAnger && brain
-				.getOptionalMemory(MemoryModuleType.HURT_BY_ENTITY)
-				.map((e) -> e instanceof PlayerEntity)
-				.orElse(false);
+		boolean heavyAnger = mediumAnger && brain.getOptionalMemory(MemoryModuleType.ADMIRING_DISABLED).orElse(false);
+		boolean goldDistracted = brain.hasMemoryModule(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM);
 
 		if (heavyAnger) return PiglinAggroLevel.HEAVY;
+		if (goldDistracted) return PiglinAggroLevel.GOLD_DISTRACTED;
 		if (mediumAnger) return PiglinAggroLevel.MEDIUM;
 		if (lightAnger) return PiglinAggroLevel.LIGHT;
 		return PiglinAggroLevel.NONE;

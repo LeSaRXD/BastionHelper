@@ -38,7 +38,10 @@ public class PathRenderer extends Renderer {
 
 	@Override
 	public void render() {
-		if (currentNodeIndex + 1 >= positions.length) {
+		BlockPos firstPos;
+		try {
+			firstPos = positions[currentNodeIndex + 1];
+		} catch (IndexOutOfBoundsException _e) {
 			targetRenderer.render();
 			return;
 		}
@@ -50,7 +53,7 @@ public class PathRenderer extends Renderer {
 		buffer.begin(DRAW_MODE, VertexFormats.POSITION_COLOR);
 
 		this.addVertex(buffer, entity.getPos().add(0, 0.5, 0), color);
-		this.addVertex(buffer, blockToVec(positions[currentNodeIndex + 1]), color);
+		this.addVertex(buffer, blockToVec(firstPos), color);
 
 		for (int i = currentNodeIndex + 1; i < positions.length - 1; i++) {
 			BlockPos from = positions[i],

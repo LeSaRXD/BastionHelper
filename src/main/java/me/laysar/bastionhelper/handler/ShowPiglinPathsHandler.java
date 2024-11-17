@@ -8,14 +8,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class ShowPiglinPathsHandler {
 	public enum PiglinAggroLevel {
 		NONE(0),
 		LIGHT(1),
 		MEDIUM(2),
-		HEAVY(3);
+		HEAVY(3),
+		GOLD_DISTRACTED(4);
 
 		private final int value;
 		public int toInt() {
@@ -26,11 +26,12 @@ public class ShowPiglinPathsHandler {
 				case 1 -> LIGHT;
 				case 2 -> MEDIUM;
 				case 3 -> HEAVY;
+				case 4 -> GOLD_DISTRACTED;
 				default -> NONE;
 			};
 		}
 
-		private PiglinAggroLevel(int value) {
+		PiglinAggroLevel(int value) {
 			this.value = value;
 		}
 	}
