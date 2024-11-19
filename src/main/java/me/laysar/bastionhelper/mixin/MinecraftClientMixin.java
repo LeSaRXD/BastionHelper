@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
 	@Inject(method = "disconnect()V", at = @At("HEAD"))
-	void disconnect(CallbackInfo ci) {
+	void onDisconnect(CallbackInfo ci) {
 		ShowPiglinPathsHandler.clear();
 	}
 }

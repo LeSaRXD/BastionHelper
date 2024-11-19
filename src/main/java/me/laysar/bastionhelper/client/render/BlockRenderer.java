@@ -11,7 +11,10 @@ import java.awt.*;
 
 public class BlockRenderer extends Renderer {
 	private final Vec3d[] verts;
-	private final Color color;
+	private Color color;
+	public void setColor(Color value) {
+		color = value;
+	}
 
 	public BlockRenderer(BlockPos blockPos, Color color) {
 		this.verts = new Vec3d[24];

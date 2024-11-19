@@ -11,12 +11,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
 	@Inject(method = "renderWorld", at = @At("HEAD"))
-	private void renderWorldStart(float delta, long time, MatrixStack matrixStack, CallbackInfo ci) {
+	private void onRenderWorldStart(float delta, long time, MatrixStack matrixStack, CallbackInfo ci) {
 		RenderQueue.get().matrixStack = matrixStack;
 	}
 
 	@Inject(method = "renderWorld", at = @At("TAIL"))
-	private void renderWorldFinish(float delta, long time, MatrixStack matrixStack, CallbackInfo ci) {
+	private void onRenderWorldFinish(float delta, long time, MatrixStack matrixStack, CallbackInfo ci) {
 		RenderQueue.get().matrixStack = null;
 	}
 }

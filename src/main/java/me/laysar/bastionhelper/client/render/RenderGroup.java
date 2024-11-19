@@ -1,14 +1,15 @@
 package me.laysar.bastionhelper.client.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.util.Pair;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Predicate;
 
-public class RenderGroup<T extends Renderer> extends Renderer {
+public class RenderGroup<R extends Renderer> extends Renderer {
 	private final int capacity;
-	private final Set<T> renderers = new HashSet<>();
-	private final List<Pair<Boolean, T>> queue = new ArrayList<>();
+	private final List<R> renderers = Collections.synchronizedList(new ArrayList<>());
 
 	public enum RenderOption {
 		FRONT,
@@ -24,8 +25,6 @@ public class RenderGroup<T extends Renderer> extends Renderer {
 
 	@Override
 	public void render() {
-		processQueues();
-
 		switch (option) {
 			case FRONT:
 				GlStateManager.disableDepthTest();
@@ -34,33 +33,22 @@ public class RenderGroup<T extends Renderer> extends Renderer {
 				GlStateManager.enableDepthTest();
 				break;
 		}
-		for (Renderer renderer : renderers)
-			renderer.render();
-	}
-
-	public void add(T renderer) {
-		queue.add(new Pair<>(true, renderer));
-	}
-
-	public void remove(T renderer) {
-		if (renderer == null) return;
-		queue.add(new Pair<>(false, renderer));
-	}
-
-	private void processQueues() {
-		for (Pair<Boolean, T> pair : queue) {
-			if (pair.getLeft()) {
-				if (renderers.size() < capacity)
-					renderers.add(pair.getRight());
-			}
-			else
-				renderers.remove(pair.getRight());
+		synchronized (renderers) {
+			for (Renderer renderer : renderers)
+				renderer.render();
 		}
-		queue.clear();
+	}
+
+	public void add(R renderer) {
+		if (renderers.size() < capacity)
+			renderers.add(renderer);
+	}
+
+	public void remove(R renderer) {
+		renderers.removeIf(Predicate.isEqual(renderer));
 	}
 
 	public void clear() {
 		renderers.clear();
-		queue.clear();
 	}
 }

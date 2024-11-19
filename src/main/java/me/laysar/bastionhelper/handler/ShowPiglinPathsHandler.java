@@ -14,21 +14,19 @@ public class ShowPiglinPathsHandler {
 		NONE(0),
 		LIGHT(1),
 		MEDIUM(2),
-		HEAVY(3),
-		GOLD_DISTRACTED(4);
+		GOLD_DISTRACTED(3),
+		HEAVY(4);
 
 		private final int value;
 		public int toInt() {
 			return this.value;
 		}
 		public static PiglinAggroLevel fromInt(int value) {
-			return switch (value) {
-				case 1 -> LIGHT;
-				case 2 -> MEDIUM;
-				case 3 -> HEAVY;
-				case 4 -> GOLD_DISTRACTED;
-				default -> NONE;
-			};
+			for (PiglinAggroLevel level : values()) {
+				if (level.value == value)
+					return level;
+			}
+			return NONE;
 		}
 
 		PiglinAggroLevel(int value) {
@@ -48,7 +46,7 @@ public class ShowPiglinPathsHandler {
 		}
 	}
 
-	public static void newPath(int id, @Nullable Path path, PiglinAggroLevel aggroLevel) {
+	public static void create(int id, @Nullable Path path, PiglinAggroLevel aggroLevel) {
 		if (subscribedPlayer == null) return;
 		if (path == null) return;
 
@@ -56,19 +54,19 @@ public class ShowPiglinPathsHandler {
 		sentNodeIndexes.put(id, path.getCurrentNodeIndex());
 	}
 
-	public static void updatePath(int id, @Nullable Path path, PiglinAggroLevel aggroLevel) {
+	public static void update(int id, @Nullable Path path, PiglinAggroLevel aggroLevel) {
 		if (subscribedPlayer == null ||
 				path == null) return;
 
 		Integer sentNodeIndex = sentNodeIndexes.get(id);
-		if (sentNodeIndex == null) newPath(id, path, aggroLevel);
+		if (sentNodeIndex == null) create(id, path, aggroLevel);
 		else if (sentNodeIndex == path.getCurrentNodeIndex()) return;
 
 		ServerEventEmitter.updatePiglinPath(subscribedPlayer, id, path.getCurrentNodeIndex(), aggroLevel.toInt());
 		sentNodeIndexes.put(id, path.getCurrentNodeIndex());
 	}
 
-	public static void removePath(int id) {
+	public static void remove(int id) {
 		if (subscribedPlayer == null) return;
 
 		ServerEventEmitter.removePiglinPath(subscribedPlayer, id);

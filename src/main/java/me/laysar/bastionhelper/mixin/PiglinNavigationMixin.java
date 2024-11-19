@@ -1,7 +1,6 @@
 package me.laysar.bastionhelper.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import me.laysar.bastionhelper.BastionHelper;
 import me.laysar.bastionhelper.handler.ShowPiglinPathsHandler;
 import me.laysar.bastionhelper.handler.ShowPiglinPathsHandler.PiglinAggroLevel;
 import net.minecraft.entity.ai.brain.Brain;
@@ -10,7 +9,7 @@ import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.ai.pathing.Path;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PiglinEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import org.apache.commons.lang3.mutable.MutableLong;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -22,38 +21,67 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityNavigation.class)
-public abstract class EntityNavigationMixin {
+public abstract class PiglinNavigationMixin {
 	@Shadow @Final protected MobEntity entity;
-
 	@Shadow @Nullable public abstract Path getCurrentPath();
 
+	@Shadow protected int tickCount;
+	@Shadow @Nullable protected Path currentPath;
+	@Unique
+	private static final long bastionhelper$REMOVE_IN = 3L;
+	@Unique
+	private static final MutableLong bastionhelper$ticksUntilRemoved = new MutableLong(-1L);
+
+	@Inject(method = "tick()V", at = @At("HEAD"))
+	void tick(CallbackInfo ci) {
+		if (!(this.entity instanceof PiglinEntity piglin)) return;
+
+		long ticksUntilRemoved = bastionhelper$ticksUntilRemoved.getValue();
+		if (ticksUntilRemoved < 0) return;
+
+		if (bastionhelper$ticksUntilRemoved.decrementAndGet() > 0) return;
+
+		ShowPiglinPathsHandler.remove(piglin.getEntityId());
+	}
+
 	@ModifyReturnValue(method = "findPathToAny(Ljava/util/Set;IZI)Lnet/minecraft/entity/ai/pathing/Path;", at = @At("RETURN"))
-	Path findPathToAny(Path original) {
+	Path onCreatePath(Path original) {
 		if (!(this.entity instanceof PiglinEntity piglin)) return original;
 
-		BastionHelper.LOGGER.info("Here");
+		bastionhelper$ticksUntilRemoved.setValue(-1L);
 
-		ShowPiglinPathsHandler.newPath(piglin.getEntityId(), original, aggroLevel(piglin));
+		ShowPiglinPathsHandler.create(piglin.getEntityId(), original, bastionhelper$aggroLevel(piglin));
 		return original;
+	}
+
+	@Inject(method = "adjustPath()V", at = @At("TAIL"))
+	void onAdjustPath(CallbackInfo ci) {
+		if (this.currentPath == null) return;
+		if (!(this.entity instanceof PiglinEntity piglin)) return;
+
+		ShowPiglinPathsHandler.create(piglin.getEntityId(), this.currentPath, bastionhelper$aggroLevel(piglin));
 	}
 
 	@Inject(method = "*",
 	at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/pathing/Path;setCurrentNodeIndex(I)V"))
-	void setCurrentNodeIndex(CallbackInfo ci) {
+	void onSetCurrentNodeIndex(CallbackInfo ci) {
 		if (!(this.entity instanceof PiglinEntity piglin)) return;
 
-		ShowPiglinPathsHandler.updatePath(piglin.getEntityId(), this.getCurrentPath(), aggroLevel(piglin));
+		ShowPiglinPathsHandler.update(piglin.getEntityId(), this.getCurrentPath(), bastionhelper$aggroLevel(piglin));
 	}
 
 	@Inject(method = "stop()V", at = @At("HEAD"))
-	void stop(CallbackInfo ci) {
+	void onRemovePath(CallbackInfo ci) {
 		if (!(this.entity instanceof PiglinEntity piglin)) return;
 
-		ShowPiglinPathsHandler.removePath(piglin.getEntityId());
+		if (bastionhelper$aggroLevel(piglin) != PiglinAggroLevel.NONE)
+			bastionhelper$ticksUntilRemoved.setValue(bastionhelper$REMOVE_IN);
+		else
+			ShowPiglinPathsHandler.remove(piglin.getEntityId());
 	}
 
 	@Unique
-	private PiglinAggroLevel aggroLevel(@NotNull PiglinEntity piglin) {
+	private PiglinAggroLevel bastionhelper$aggroLevel(@NotNull PiglinEntity piglin) {
 		Brain<PiglinEntity> brain = piglin.getBrain();
 		boolean lightAnger = brain.hasMemoryModule(MemoryModuleType.NEAREST_TARGETABLE_PLAYER_NOT_WEARING_GOLD);
 		boolean mediumAnger = brain.hasMemoryModule(MemoryModuleType.ANGRY_AT);

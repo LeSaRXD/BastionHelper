@@ -13,27 +13,21 @@ import java.awt.*;
 public class PathRenderer extends Renderer {
 	private final LivingEntity entity;
 	private final BlockPos[] positions;
-	private final BlockPos target;
-	private int currentNodeIndex = 0;
+	private int currentNodeIndex;
 	private Color color;
-	private BlockRenderer targetRenderer;
 
 	public void setCurrentNodeIndex(int value) {
 		currentNodeIndex = value;
 	}
 	public void setColor(Color value) {
 		color = value;
-		targetRenderer = new BlockRenderer(target, this.color);
 	}
 
-	public PathRenderer(@NotNull LivingEntity entity, @NotNull BlockPos[] positions, @NotNull BlockPos target, int currentNodeIndex, @NotNull Color color) {
+	public PathRenderer(@NotNull LivingEntity entity, @NotNull BlockPos[] positions, int currentNodeIndex, @NotNull Color color) {
 		this.entity = entity;
 		this.positions = positions;
-		this.target = target;
 		this.color = color;
 		this.currentNodeIndex = currentNodeIndex;
-
-		this.targetRenderer = new BlockRenderer(target, this.color);
 	}
 
 	@Override
@@ -42,7 +36,6 @@ public class PathRenderer extends Renderer {
 		try {
 			firstPos = positions[currentNodeIndex + 1];
 		} catch (IndexOutOfBoundsException _e) {
-			targetRenderer.render();
 			return;
 		}
 
@@ -62,7 +55,5 @@ public class PathRenderer extends Renderer {
 			this.addVertex(buffer, blockToVec(to), color);
 		}
 		tessellator.draw();
-
-		targetRenderer.render();
 	}
 }
