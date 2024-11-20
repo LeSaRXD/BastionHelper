@@ -1,5 +1,6 @@
 package me.laysar.bastionhelper.mixin;
 
+import me.laysar.bastionhelper.handler.PausePiglinsHandler;
 import me.laysar.bastionhelper.handler.ShowPiglinPathsHandler;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.PiglinEntity;
@@ -12,5 +13,11 @@ public abstract class PiglinEntityMixin extends LivingEntityMixin {
 	protected void onDeath(float health, CallbackInfo ci) {
 		if (health <= 0.0f)
 			ShowPiglinPathsHandler.remove(((LivingEntity) (Object) this).getEntityId());
+	}
+
+	@Override
+	protected void onTick(CallbackInfo ci) {
+		if (PausePiglinsHandler.isPaused())
+			ci.cancel();
 	}
 }

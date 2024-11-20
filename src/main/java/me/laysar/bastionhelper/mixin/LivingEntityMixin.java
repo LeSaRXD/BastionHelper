@@ -11,4 +11,7 @@ public abstract class LivingEntityMixin {
 
 	@Inject(method = "setHealth(F)V", at = @At("TAIL"))
 	protected void onDeath(float health, CallbackInfo ci) {}
+
+	@Inject(method = "tick", at = @At("HEAD"), cancellable = true)
+	protected void onTick(CallbackInfo ci) {}
 }
