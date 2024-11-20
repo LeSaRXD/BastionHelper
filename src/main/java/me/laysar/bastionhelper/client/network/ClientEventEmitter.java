@@ -23,7 +23,7 @@ public class ClientEventEmitter {
 	public static void pausePiglins() {
 		ClientSidePacketRegistry.INSTANCE.sendToServer(PAUSE_PIGLINS, empty());
 	}
-	
+
 	public static void unpausePiglins() {
 		ClientSidePacketRegistry.INSTANCE.sendToServer(UNPAUSE_PIGLINS, empty());
 	}

@@ -14,9 +14,9 @@ public class ServerEventReceiver {
 				(ctx, _buf) -> ShowPiglinPathsHandler.run(ctx.getPlayer()));
 
 		ServerSidePacketRegistry.INSTANCE.register(PacketIds.PAUSE_PIGLINS,
-				(_ctx, _buf) -> PausePiglinsHandler.pause());
+				(ctx, _buf) -> PausePiglinsHandler.pause(ctx.getPlayer()));
 
 		ServerSidePacketRegistry.INSTANCE.register(PacketIds.UNPAUSE_PIGLINS,
-				(_ctx, _buf) -> PausePiglinsHandler.unpause());
+				(ctx, _buf) -> PausePiglinsHandler.unpause(ctx.getPlayer()));
 	}
 }

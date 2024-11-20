@@ -6,5 +6,6 @@ public class CommandManager {
 	public static void register() {
 		CommandRegistrationCallback.EVENT.register(HighlightPiglinsCommand::register);
 		CommandRegistrationCallback.EVENT.register(ShowPiglinPathsCommand::register);
+		CommandRegistrationCallback.EVENT.register(PausePiglinsCommand::register);
 	}
 }

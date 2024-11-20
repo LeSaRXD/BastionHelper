@@ -11,8 +11,12 @@ import org.jetbrains.annotations.NotNull;
 import static me.laysar.bastionhelper.network.PacketIds.*;
 
 public class ServerEventEmitter {
+	private static @NotNull PacketByteBuf empty() {
+		return new PacketByteBuf(Unpooled.buffer());
+	}
+
 	public static void createPiglinPath(@NotNull PlayerEntity player, int id, @NotNull Path path, int aggroLevel) {
-		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+		PacketByteBuf buf = empty();
 
 		buf.writeInt(id);
 		buf.writeInt(path.getCurrentNodeIndex());
@@ -28,7 +32,7 @@ public class ServerEventEmitter {
 	}
 
 	public static void updatePiglinPath(@NotNull PlayerEntity player, int id, int currentNodeIndex, int aggroLevel) {
-		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+		PacketByteBuf buf = empty();
 
 		buf.writeInt(id);
 		buf.writeInt(currentNodeIndex);
@@ -38,11 +42,19 @@ public class ServerEventEmitter {
 	}
 
 	public static void removePiglinPath(@NotNull PlayerEntity player, int id) {
-		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+		PacketByteBuf buf = empty();
 
 		buf.writeInt(id);
 		buf.writeInt(-1);
 
 		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, UPDATE_PIGLIN_PATH, buf);
+	}
+
+	public static void confirmPause(@NotNull PlayerEntity player) {
+		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, PAUSE_PIGLINS, empty());
+	}
+
+	public static void confirmUnpause(@NotNull PlayerEntity player) {
+		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, UNPAUSE_PIGLINS, empty());
 	}
 }
