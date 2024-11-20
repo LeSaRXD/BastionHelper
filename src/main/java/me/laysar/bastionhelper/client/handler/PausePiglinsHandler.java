@@ -6,6 +6,9 @@ import net.minecraft.network.PacketByteBuf;
 
 public class PausePiglinsHandler {
 	private static boolean paused = false;
+	public static boolean isPaused() {
+		return paused;
+	}
 
 	public static void run() {
 		if (paused)

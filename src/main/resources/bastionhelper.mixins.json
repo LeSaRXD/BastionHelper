@@ -11,7 +11,9 @@
 	"client": [
 		"DummyProfilerMixin",
 		"GameRendererMixin",
-		"MinecraftClientMixin"
+		"MinecraftClientMixin",
+		"LivingEntityRendererMixin",
+		"PiglinEntityRendererMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
