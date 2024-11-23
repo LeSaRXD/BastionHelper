@@ -38,7 +38,7 @@ public abstract class PiglinNavigationMixin {
 	@Unique
 	private static final long bastionhelper$REMOVE_IN = 3L;
 	@Unique
-	private static final MutableLong bastionhelper$ticksUntilRemoved = new MutableLong(-1L);
+	private final MutableLong bastionhelper$ticksUntilRemoved = new MutableLong(-1L);
 
 	@Inject(method = "tick()V", at = @At("HEAD"))
 	void tick(CallbackInfo ci) {
