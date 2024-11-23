@@ -49,7 +49,7 @@ public class KeyInputHandler {
 			if (client.player == null || client.world == null) return;
 
 			if (highlightPiglinsKey.wasPressed())
-				ClientEventEmitter.highlightPiglins();
+				HighlightPiglinsHandler.run();
 			else if (showPiglinPathfindingKey.wasPressed())
 				ShowPiglinPathsHandler.run();
 			else if (pausePiglinsKey.wasPressed())

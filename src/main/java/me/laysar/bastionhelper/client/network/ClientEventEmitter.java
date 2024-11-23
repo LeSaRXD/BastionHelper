@@ -16,6 +16,10 @@ public class ClientEventEmitter {
 		ClientSidePacketRegistry.INSTANCE.sendToServer(HIGHLIGHT_PIGLINS, empty());
 	}
 
+	public static void lowlightPiglins() {
+		ClientSidePacketRegistry.INSTANCE.sendToServer(LOWLIGHT_PIGLINS, empty());
+	}
+
 	public static void showPiglinPaths() {
 		ClientSidePacketRegistry.INSTANCE.sendToServer(SHOW_PIGLIN_PATHS, empty());
 	}

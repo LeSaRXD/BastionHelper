@@ -15,6 +15,14 @@ public class ServerEventEmitter {
 		return new PacketByteBuf(Unpooled.buffer());
 	}
 
+	public static void confirmHighlight(@NotNull PlayerEntity player) {
+		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, HIGHLIGHT_PIGLINS, empty());
+	}
+
+	public static void confirmLowlight(@NotNull PlayerEntity player) {
+		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, LOWLIGHT_PIGLINS, empty());
+	}
+
 	public static void createPiglinPath(@NotNull PlayerEntity player, int id, @NotNull Path path, int aggroLevel) {
 		PacketByteBuf buf = empty();
 

@@ -17,7 +17,7 @@ public class PausePiglinsCommand {
 
 	public static int run(CommandContext<ServerCommandSource> ctx) {
 		try {
-			PausePiglinsHandler.togglePause(ctx.getSource().getPlayer());
+			PausePiglinsHandler.run(ctx.getSource().getPlayer());
 			return Command.SINGLE_SUCCESS;
 		} catch (Exception e) {
 			return 0;

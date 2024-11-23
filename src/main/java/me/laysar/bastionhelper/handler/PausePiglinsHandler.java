@@ -10,6 +10,13 @@ public class PausePiglinsHandler {
 		return paused;
 	}
 
+	public static void run(@NotNull PlayerEntity player) {
+		paused = !paused;
+		if (paused)
+			ServerEventEmitter.confirmPause(player);
+		else
+			ServerEventEmitter.confirmUnpause(player);
+	}
 	public static void pause(@NotNull PlayerEntity player) {
 		if (paused) return;
 		paused = true;
@@ -19,12 +26,5 @@ public class PausePiglinsHandler {
 		if (!paused) return;
 		paused = false;
 		ServerEventEmitter.confirmUnpause(player);
-	}
-	public static void togglePause(@NotNull PlayerEntity player) {
-		paused = !paused;
-		if (paused)
-			ServerEventEmitter.confirmPause(player);
-		else
-			ServerEventEmitter.confirmUnpause(player);
 	}
 }

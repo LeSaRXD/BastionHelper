@@ -1,42 +1,30 @@
 package me.laysar.bastionhelper.handler;
 
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.PiglinEntity;
+import me.laysar.bastionhelper.network.ServerEventEmitter;
 import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class HighlightPiglinsHandler {
-	private static Set<PiglinEntity> highlightedPiglins = null;
+	private static boolean highlighted = false;
+	public static boolean isHighlighted() {
+		return highlighted;
+	}
 
 	public static void run(@NotNull PlayerEntity player) {
-		if (highlightedPiglins == null) {
-			highlight(player);
-		} else {
-			lowlight();
-		}
+		highlighted = !highlighted;
+		if (highlighted)
+			ServerEventEmitter.confirmHighlight(player);
+		else
+			ServerEventEmitter.confirmLowlight(player);
 	}
-
 	public static void highlight(@NotNull PlayerEntity player) {
-		if (highlightedPiglins == null)
-			highlightedPiglins = new HashSet<>();
-
-		StatusEffectInstance effect = new StatusEffectInstance(StatusEffects.GLOWING, Integer.MAX_VALUE, 0, true, false);
-		for (PiglinEntity piglin : player.world.getEntities(PiglinEntity.class, player.getBoundingBox().expand(100, 100, 100), (_a) -> true)) {
-			highlightedPiglins.add(piglin);
-			piglin.applyStatusEffect(effect);
-		}
+		if (highlighted) return;
+		highlighted = true;
+		ServerEventEmitter.confirmHighlight(player);
 	}
-
-	public static void lowlight() {
-		if (highlightedPiglins == null) return;
-
-		for (PiglinEntity piglin : highlightedPiglins) {
-			piglin.removeStatusEffect(StatusEffects.GLOWING);
-		}
-		highlightedPiglins = null;
+	public static void lowlight(@NotNull PlayerEntity player) {
+		if (!highlighted) return;
+		highlighted = false;
+		ServerEventEmitter.confirmLowlight(player);
 	}
 }
