@@ -38,6 +38,7 @@ public abstract class PiglinNavigationMixin {
 
 	@Inject(method = "tick()V", at = @At("HEAD"))
 	void tick(CallbackInfo ci) {
+		if (this.entity.world.isClient) return;
 		if (!(this.entity instanceof PiglinEntity piglin)) return;
 
 		long ticksUntilRemoved = bastionhelper$ticksUntilRemoved.getValue();
@@ -50,6 +51,7 @@ public abstract class PiglinNavigationMixin {
 
 	@ModifyReturnValue(method = "findPathToAny(Ljava/util/Set;IZI)Lnet/minecraft/entity/ai/pathing/Path;", at = @At("RETURN"))
 	Path onCreatePath(Path original) {
+		if (this.entity.world.isClient) return original;
 		if (!(this.entity instanceof PiglinEntity piglin)) return original;
 
 		bastionhelper$ticksUntilRemoved.setValue(-1L);
@@ -60,6 +62,7 @@ public abstract class PiglinNavigationMixin {
 
 	@Inject(method = "adjustPath()V", at = @At("TAIL"))
 	void onAdjustPath(CallbackInfo ci) {
+		if (this.entity.world.isClient) return;
 		if (this.currentPath == null) return;
 		if (!(this.entity instanceof PiglinEntity piglin)) return;
 
@@ -69,6 +72,7 @@ public abstract class PiglinNavigationMixin {
 	@Inject(method = "*",
 	at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/pathing/Path;setCurrentNodeIndex(I)V"))
 	void onSetCurrentNodeIndex(CallbackInfo ci) {
+		if (this.entity.world.isClient) return;
 		if (!(this.entity instanceof PiglinEntity piglin)) return;
 
 		ShowPiglinPathsHandler.update(piglin.getEntityId(), this.getCurrentPath(), bastionhelper$aggroLevel(piglin));
@@ -76,6 +80,7 @@ public abstract class PiglinNavigationMixin {
 
 	@Inject(method = "stop()V", at = @At("HEAD"))
 	void onRemovePath(CallbackInfo ci) {
+		if (this.entity.world.isClient) return;
 		if (!(this.entity instanceof PiglinEntity piglin)) return;
 
 		if (bastionhelper$aggroLevel(piglin) != PiglinAggroLevel.NONE)

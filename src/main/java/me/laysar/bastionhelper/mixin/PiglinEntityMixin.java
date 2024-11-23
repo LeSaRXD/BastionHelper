@@ -16,8 +16,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class PiglinEntityMixin extends LivingEntityMixin {
 	@Override
 	protected void onDeath(float health, CallbackInfo ci) {
+		LivingEntity entity = (LivingEntity) (Object) this;
+		if (entity.world.isClient) return;
 		if (health <= 0.0f)
-			ShowPiglinPathsHandler.remove(((LivingEntity) (Object) this).getEntityId());
+			ShowPiglinPathsHandler.remove(entity.getEntityId());
 	}
 
 	@Override
@@ -28,6 +30,7 @@ public abstract class PiglinEntityMixin extends LivingEntityMixin {
 
 	@Unique
 	private void bastionhelper$applyGlowing() {
+		if (((LivingEntity) (Object) this).world.isClient) return;
 		if (HighlightPiglinsHandler.isHighlighted()) {
 			if (!this.hasStatusEffect(StatusEffects.GLOWING))
 				this.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, Integer.MAX_VALUE, 0, true, false));
@@ -43,8 +46,7 @@ public abstract class PiglinEntityMixin extends LivingEntityMixin {
 
 		ci.cancel();
 		PiglinEntity piglin = ((PiglinEntity) (Object) this);
-		MinecraftServer server = piglin.getServer();
-		if (server == null) return;
-		piglin.getBrain().tick(server.getWorld(piglin.world.getRegistryKey()), piglin);
+		if (piglin.world.isClient) return;
+		piglin.getNavigation().tick();
 	}
 }
