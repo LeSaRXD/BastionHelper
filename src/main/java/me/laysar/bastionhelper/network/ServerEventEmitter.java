@@ -1,6 +1,7 @@
 package me.laysar.bastionhelper.network;
 
 import io.netty.buffer.Unpooled;
+import me.laysar.bastionhelper.handler.ShowPiglinPathsHandler;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.entity.ai.pathing.Path;
 import net.minecraft.entity.ai.pathing.PathNode;
@@ -64,5 +65,18 @@ public class ServerEventEmitter {
 
 	public static void confirmUnpause(@NotNull PlayerEntity player) {
 		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, UNPAUSE_PIGLINS, empty());
+	}
+
+	public static void updateAggroLevel(@NotNull PlayerEntity player, int id, int aggroLevel) {
+		PacketByteBuf buf = empty();
+		buf.writeInt(id);
+		buf.writeInt(aggroLevel);
+		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, UPDATE_AGGRO_LEVEL, buf);
+	}
+
+	public static void removeAggroLevel(@NotNull PlayerEntity player, int id) {
+		PacketByteBuf buf = empty();
+		buf.writeInt(id);
+		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, REMOVE_AGGRO_LEVEL, buf);
 	}
 }

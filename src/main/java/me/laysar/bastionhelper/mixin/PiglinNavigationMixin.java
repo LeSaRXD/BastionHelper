@@ -1,6 +1,7 @@
 package me.laysar.bastionhelper.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import me.laysar.bastionhelper.Helpers;
 import me.laysar.bastionhelper.handler.ShowPiglinPathsHandler;
 import me.laysar.bastionhelper.handler.ShowPiglinPathsHandler.PiglinAggroLevel;
 import net.minecraft.entity.ai.brain.Brain;
@@ -56,7 +57,7 @@ public abstract class PiglinNavigationMixin {
 
 		bastionhelper$ticksUntilRemoved.setValue(-1L);
 
-		ShowPiglinPathsHandler.create(piglin.getEntityId(), original, bastionhelper$aggroLevel(piglin));
+		ShowPiglinPathsHandler.create(piglin.getEntityId(), original, Helpers.piglinAggroLevel(piglin));
 		return original;
 	}
 
@@ -66,7 +67,7 @@ public abstract class PiglinNavigationMixin {
 		if (this.currentPath == null) return;
 		if (!(this.entity instanceof PiglinEntity piglin)) return;
 
-		ShowPiglinPathsHandler.create(piglin.getEntityId(), this.currentPath, bastionhelper$aggroLevel(piglin));
+		ShowPiglinPathsHandler.create(piglin.getEntityId(), this.currentPath, Helpers.piglinAggroLevel(piglin));
 	}
 
 	@Inject(method = "*",
@@ -75,7 +76,7 @@ public abstract class PiglinNavigationMixin {
 		if (this.entity.world.isClient) return;
 		if (!(this.entity instanceof PiglinEntity piglin)) return;
 
-		ShowPiglinPathsHandler.update(piglin.getEntityId(), this.getCurrentPath(), bastionhelper$aggroLevel(piglin));
+		ShowPiglinPathsHandler.update(piglin.getEntityId(), this.getCurrentPath(), Helpers.piglinAggroLevel(piglin));
 	}
 
 	@Inject(method = "stop()V", at = @At("HEAD"))
@@ -83,34 +84,9 @@ public abstract class PiglinNavigationMixin {
 		if (this.entity.world.isClient) return;
 		if (!(this.entity instanceof PiglinEntity piglin)) return;
 
-		if (bastionhelper$aggroLevel(piglin) != PiglinAggroLevel.NONE)
+		if (Helpers.piglinAggroLevel(piglin) != PiglinAggroLevel.NONE)
 			bastionhelper$ticksUntilRemoved.setValue(bastionhelper$REMOVE_IN);
 		else
 			ShowPiglinPathsHandler.remove(piglin.getEntityId());
-	}
-
-	@Unique
-	private PiglinAggroLevel bastionhelper$aggroLevel(@NotNull PiglinEntity piglin) {
-		boolean lightAnger, mediumAnger = false, heavyAnger = false, goldDistracted;
-
-		Brain<PiglinEntity> brain = piglin.getBrain();
-		lightAnger = brain.hasMemoryModule(MemoryModuleType.NEAREST_TARGETABLE_PLAYER_NOT_WEARING_GOLD);
-
-		Optional<UUID> playerUuid = brain.getOptionalMemory(MemoryModuleType.ANGRY_AT);
-		if (playerUuid.isPresent()) {
-			ServerPlayerEntity player = (ServerPlayerEntity) piglin.getEntityWorld().getPlayerByUuid(playerUuid.get());
-			if (player != null && player.interactionManager.getGameMode().isSurvivalLike()) {
-				mediumAnger = true;
-				heavyAnger = brain.getOptionalMemory(MemoryModuleType.ADMIRING_DISABLED).orElse(false);
-			}
-		}
-
-		goldDistracted = brain.hasMemoryModule(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM);
-
-		if (heavyAnger) return PiglinAggroLevel.HEAVY;
-		if (goldDistracted) return PiglinAggroLevel.GOLD_DISTRACTED;
-		if (mediumAnger) return PiglinAggroLevel.MEDIUM;
-		if (lightAnger) return PiglinAggroLevel.LIGHT;
-		return PiglinAggroLevel.NONE;
 	}
 }

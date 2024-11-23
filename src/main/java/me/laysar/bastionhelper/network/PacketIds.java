@@ -11,4 +11,6 @@ public class PacketIds {
 	public static final Identifier UPDATE_PIGLIN_PATH = new Identifier(BastionHelper.MOD_ID, "update_piglin_path");
 	public static final Identifier PAUSE_PIGLINS = new Identifier(BastionHelper.MOD_ID, "pause_piglins");
 	public static final Identifier UNPAUSE_PIGLINS = new Identifier(BastionHelper.MOD_ID, "unpause_piglins");
+	public static final Identifier UPDATE_AGGRO_LEVEL = new Identifier(BastionHelper.MOD_ID, "update_aggro_level");
+	public static final Identifier REMOVE_AGGRO_LEVEL = new Identifier(BastionHelper.MOD_ID, "remove_aggro_level");
 }

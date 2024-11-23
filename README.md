@@ -11,7 +11,7 @@ Planned features:
 - [x] Piglin pathfinding visualizer (akin to the ender dragon visualizer)
 - [x] Piglin targeted block highlight
 - [x] Piglin pausing
-- [ ] Aggro'd piglin counter
+- [x] Aggro'd piglin counter
 - [ ] Piglin pathfinding deadzones (from lava, etc.)
 - [ ] Piglin aggro toggle in creative (force them to follow you in creative mode)
 - [ ] Probably more stuff im forgetting
