@@ -2,15 +2,13 @@ package me.laysar.bastionhelper.client.handler;
 
 import com.mojang.datafixers.util.Either;
 import me.laysar.bastionhelper.client.network.ClientEventEmitter;
-import me.laysar.bastionhelper.client.render.BlockRenderer;
+import me.laysar.bastionhelper.client.render.BlockOutlineRenderer;
 import me.laysar.bastionhelper.client.render.PathRenderer;
 import me.laysar.bastionhelper.client.render.RenderGroup;
 import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.PiglinBrain;
-import net.minecraft.entity.mob.PiglinEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -29,13 +27,13 @@ public class ShowPiglinPathsHandler {
 
 	private static class TargetLocationRenderer {
 		public final BlockPos blockPos;
-		public final BlockRenderer renderer;
+		public final BlockOutlineRenderer renderer;
 		private final Map<Integer, PiglinAggroLevel> piglinAggroLevels = new HashMap<>();
 		private final Map<PiglinAggroLevel, MutableInt> aggroLevelCounts;
 
 		public TargetLocationRenderer(BlockPos position) {
 			this.blockPos = position;
-			this.renderer = new BlockRenderer(position, Color.WHITE);
+			this.renderer = new BlockOutlineRenderer(position, Color.WHITE);
 			aggroLevelCounts = Arrays.stream(PiglinAggroLevel.values()).collect(Collectors.toMap(lvl -> lvl, _l -> new MutableInt(0)));
 		}
 
@@ -73,7 +71,7 @@ public class ShowPiglinPathsHandler {
 			this.renderer.setColor(colorOf(maxAggroLevel.get()));
 		}
 	}
-	private static final RenderGroup<BlockRenderer> targetRenderGroup = new RenderGroup<>(50, RenderGroup.RenderOption.FRONT);
+	private static final RenderGroup<BlockOutlineRenderer> targetRenderGroup = new RenderGroup<>(50, RenderGroup.RenderOption.FRONT);
 	private static final RenderGroup<PathRenderer> pathfindingRenderGroup = new RenderGroup<>(50, RenderGroup.RenderOption.FRONT);
 
 	private static final Map<Integer, PathRenderer> piglinPathRenderers = new HashMap<>();

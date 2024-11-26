@@ -9,14 +9,14 @@ import net.minecraft.util.math.Vec3d;
 
 import java.awt.*;
 
-public class BlockRenderer extends Renderer {
+public class BlockOutlineRenderer extends Renderer {
 	private final Vec3d[] verts;
 	private Color color;
 	public void setColor(Color value) {
 		color = value;
 	}
 
-	public BlockRenderer(BlockPos blockPos, Color color) {
+	public BlockOutlineRenderer(BlockPos blockPos, Color color) {
 		this.verts = new Vec3d[24];
 		Vec3d center = blockToVec(blockPos);
 		for (int i = 0; i < 2; i++) {

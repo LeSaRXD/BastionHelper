@@ -1,6 +1,6 @@
 package me.laysar.bastionhelper.mixin;
 
-import me.laysar.bastionhelper.client.render.RenderQueue;
+import me.laysar.bastionhelper.client.render.GlobalRenderer;
 import net.minecraft.util.profiler.DummyProfiler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -16,6 +16,6 @@ public abstract class DummyProfilerMixin {
 	@Inject(method = "swap(Ljava/lang/String;)V", at = @At(value = "HEAD"))
 	void onDrawGizmos(String type, CallbackInfo ci) {
 		if (type == null || !type.equals(SWAP_TYPE)) return;
-		RenderQueue.get().render();
+		GlobalRenderer.INSTANCE.render();
 	}
 }
