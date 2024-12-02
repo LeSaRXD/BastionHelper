@@ -2,5 +2,6 @@
 	"key.category.bastionhelper": "Bastion Helper",
 	"key.bastionhelper.highlight_piglins": "Toggle Piglin Highlight",
 	"key.bastionhelper.show_piglin_paths": "Toggle Piglin Paths",
-	"key.bastionhelper.pause_piglins": "Toggle Piglin Pause"
+	"key.bastionhelper.pause_piglins": "Toggle Piglin Pause",
+	"key.bastionhelper.show_lava_deadzones": "Toggle Lava Deadzones"
 }

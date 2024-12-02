@@ -6,7 +6,9 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.BakedQuadFactory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -29,5 +31,82 @@ public abstract class Renderer {
 		).color(
 				comps[0], comps[1], comps[2], comps[3]
 		).next();
+	}
+
+	protected void addFace(@NotNull BufferBuilder buffer, @NotNull Vec3d pos, @NotNull Vec3d size, @NotNull Direction dir, @NotNull Color color) {
+		Vec3d cam = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
+		pos = pos.subtract(cam);
+		size = size.multiply(0.5);
+
+		float[] comps = color.getComponents(null);
+
+		switch (dir) {
+			case UP -> {
+				double up = pos.y + size.y;
+				buffer.vertex(pos.x - size.x, up, pos.z - size.z)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+				buffer.vertex(pos.x - size.x, up, pos.z + size.z)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+				buffer.vertex(pos.x + size.x, up, pos.z + size.z)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+				buffer.vertex(pos.x + size.x, up, pos.z - size.z)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+			}
+			case DOWN -> {
+				double down = pos.y - size.y;
+				buffer.vertex(pos.x - size.x, down, pos.z - size.z)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+				buffer.vertex(pos.x + size.x, down, pos.z - size.z)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+				buffer.vertex(pos.x + size.x, down, pos.z + size.z)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+				buffer.vertex(pos.x - size.x, down, pos.z + size.z)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+			}
+			case NORTH -> {
+				double front = pos.z - size.z;
+				buffer.vertex(pos.x - size.x, pos.y - size.y, front)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+				buffer.vertex(pos.x - size.x, pos.y + size.y, front)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+				buffer.vertex(pos.x + size.x, pos.y + size.y, front)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+				buffer.vertex(pos.x + size.x, pos.y - size.y, front)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+			}
+			case SOUTH -> {
+				double back = pos.z + size.z;
+				buffer.vertex(pos.x - size.x, pos.y - size.y, back)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+				buffer.vertex(pos.x + size.x, pos.y - size.y, back)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+				buffer.vertex(pos.x + size.x, pos.y + size.y, back)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+				buffer.vertex(pos.x - size.x, pos.y + size.y, back)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+			}
+			case WEST -> {
+				double left = pos.x - size.x;
+				buffer.vertex(left, pos.y - size.y, pos.z - size.z)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+				buffer.vertex(left, pos.y - size.y, pos.z + size.z)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+				buffer.vertex(left, pos.y + size.y, pos.z + size.z)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+				buffer.vertex(left, pos.y + size.y, pos.z - size.z)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+			}
+			case EAST -> {
+				double right = pos.x + size.x;
+				buffer.vertex(right, pos.y - size.y, pos.z - size.z)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+				buffer.vertex(right, pos.y + size.y, pos.z - size.z)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+				buffer.vertex(right, pos.y + size.y, pos.z + size.z)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+				buffer.vertex(right, pos.y - size.y, pos.z + size.z)
+						.color(comps[0], comps[1], comps[2], comps[3]).next();
+			}
+		}
 	}
 }

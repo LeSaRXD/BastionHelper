@@ -14,10 +14,12 @@ public class KeyInputHandler {
 	public static String KEY_HIGHLIGHT_PIGLINS = "key.bastionhelper.highlight_piglins";
 	public static String KEY_SHOW_PIGLIN_PATHS = "key.bastionhelper.show_piglin_paths";
 	public static String KEY_PAUSE_PIGLINS = "key.bastionhelper.pause_piglins";
+	public static String KEY_SHOW_LAVA_DEADZONES = "key.bastionhelper.show_lava_deadzones";
 
 	public static KeyBinding highlightPiglinsKey;
 	public static KeyBinding showPiglinPathfindingKey;
 	public static KeyBinding pausePiglinsKey;
+	public static KeyBinding showLavaDeadzonesKey;
 
 	public static void register() {
 		highlightPiglinsKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -29,13 +31,19 @@ public class KeyInputHandler {
 		showPiglinPathfindingKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
 				KEY_SHOW_PIGLIN_PATHS,
 				InputUtil.Type.KEYSYM,
-				GLFW.GLFW_KEY_L,
+				GLFW.GLFW_KEY_I,
 				KEY_CATEGORY
 		));
 		pausePiglinsKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
 				KEY_PAUSE_PIGLINS,
 				InputUtil.Type.KEYSYM,
 				GLFW.GLFW_KEY_P,
+				KEY_CATEGORY
+		));
+		showLavaDeadzonesKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+				KEY_SHOW_LAVA_DEADZONES,
+				InputUtil.Type.KEYSYM,
+				GLFW.GLFW_KEY_L,
 				KEY_CATEGORY
 		));
 
@@ -50,10 +58,12 @@ public class KeyInputHandler {
 
 			if (highlightPiglinsKey.wasPressed())
 				HighlightPiglinsHandler.run();
-			else if (showPiglinPathfindingKey.wasPressed())
+			if (showPiglinPathfindingKey.wasPressed())
 				ShowPiglinPathsHandler.run();
-			else if (pausePiglinsKey.wasPressed())
+			if (pausePiglinsKey.wasPressed())
 				PausePiglinsHandler.run();
+			if (showLavaDeadzonesKey.wasPressed())
+				ShowLavaDeadzonesHandler.run();
 		});
 	}
 }
