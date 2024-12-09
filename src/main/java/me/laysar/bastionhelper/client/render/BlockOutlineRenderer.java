@@ -38,6 +38,8 @@ public class BlockOutlineRenderer extends Renderer {
 
 	@Override
 	public void render() {
+		enableTransparency();
+
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
 
@@ -50,5 +52,7 @@ public class BlockOutlineRenderer extends Renderer {
 		}
 
 		tessellator.draw();
+
+		disableTransparency();
 	}
 }

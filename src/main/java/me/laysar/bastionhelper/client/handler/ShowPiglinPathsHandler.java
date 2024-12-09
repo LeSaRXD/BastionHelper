@@ -29,7 +29,6 @@ public class ShowPiglinPathsHandler {
 	public static boolean showPaths = false;
 
 	private static class TargetLocationRenderer {
-
 		public final BlockPos blockPos;
 		public final BlockOutlineRenderer renderer;
 		private final Map<Integer, PiglinAggroLevel> piglinAggroLevels = new HashMap<>();
