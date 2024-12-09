@@ -12,6 +12,7 @@ import java.awt.*;
 public class BlockOutlineRenderer extends Renderer {
 	private final Vec3d[] verts;
 	private Color color;
+
 	public void setColor(Color value) {
 		color = value;
 	}
@@ -23,10 +24,10 @@ public class BlockOutlineRenderer extends Renderer {
 			for (int j = 0; j < 2; j++) {
 				int idx = 2 * (2 * i + j);
 
-				verts[idx     ] = center.add(i - 0.5, j - 0.5, -0.5);
-				verts[idx +  1] = center.add(i - 0.5, j - 0.5, 0.5);
-				verts[idx +  8] = center.add(i - 0.5, -0.5, j - 0.5);
-				verts[idx +  9] = center.add(i - 0.5, 0.5, j - 0.5);
+				verts[idx] = center.add(i - 0.5, j - 0.5, -0.5);
+				verts[idx + 1] = center.add(i - 0.5, j - 0.5, 0.5);
+				verts[idx + 8] = center.add(i - 0.5, -0.5, j - 0.5);
+				verts[idx + 9] = center.add(i - 0.5, 0.5, j - 0.5);
 				verts[idx + 16] = center.add(-0.5, i - 0.5, j - 0.5);
 				verts[idx + 17] = center.add(0.5, i - 0.5, j - 0.5);
 			}

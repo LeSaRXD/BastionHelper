@@ -1,28 +1,28 @@
 package me.laysar.bastionhelper.client.render;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL32;
 
 import java.awt.*;
 import java.util.*;
 
 public class MeshRenderer extends Renderer {
+
 	protected static final int DRAW_MODE = 7;
 	private static final Vec3d ONE = new Vec3d(1.0, 1.0, 1.0),
 			OFFSET = new Vec3d(0.5, 0.5, 0.5);
 
 	private static class PositionInfo {
+
 		public final MutableInt count = new MutableInt(1);
 		public boolean up, down, north, south, east, west;
+
 		public PositionInfo(boolean up, boolean down, boolean north, boolean south, boolean east, boolean west) {
 			this.up = up;
 			this.down = down;
@@ -32,9 +32,13 @@ public class MeshRenderer extends Renderer {
 			this.west = west;
 		}
 	}
+
 	private final Map<Vec3i, PositionInfo> positionCounts = Collections.synchronizedMap(new HashMap<>());
 
-	private record Face(@NotNull Vec3i pos, @NotNull Direction dir) {}
+	private record Face(@NotNull Vec3i pos, @NotNull Direction dir) {
+
+	}
+
 	private final Set<Face> meshFaces = Collections.synchronizedSet(new HashSet<>());
 
 	private final Color color;
@@ -46,20 +50,28 @@ public class MeshRenderer extends Renderer {
 	private void updateMesh() {
 		synchronized (meshFaces) {
 			meshFaces.clear();
-			if (positionCounts.isEmpty()) return;
+			if (positionCounts.isEmpty()) {
+				return;
+			}
 			positionCounts.forEach((pos, info) -> {
-				if (!info.up)
+				if (!info.up) {
 					meshFaces.add(new Face(pos, Direction.UP));
-				if (!info.down)
+				}
+				if (!info.down) {
 					meshFaces.add(new Face(pos, Direction.DOWN));
-				if (!info.north)
+				}
+				if (!info.north) {
 					meshFaces.add(new Face(pos, Direction.NORTH));
-				if (!info.south)
+				}
+				if (!info.south) {
 					meshFaces.add(new Face(pos, Direction.SOUTH));
-				if (!info.east)
+				}
+				if (!info.east) {
 					meshFaces.add(new Face(pos, Direction.EAST));
-				if (!info.west)
+				}
+				if (!info.west) {
 					meshFaces.add(new Face(pos, Direction.WEST));
+				}
 			});
 		}
 	}
@@ -67,14 +79,19 @@ public class MeshRenderer extends Renderer {
 	public void addPositions(@NotNull Vec3i bottomLeft, @NotNull Vec3i topRight) {
 		synchronized (positionCounts) {
 			boolean shouldUpdateMesh = false;
-			for (int i = bottomLeft.getX(); i <= topRight.getX(); i++)
-				for (int j = bottomLeft.getY(); j <= topRight.getY(); j++)
-					for (int k = bottomLeft.getZ(); k <= topRight.getZ(); k++)
+			for (int i = bottomLeft.getX(); i <= topRight.getX(); i++) {
+				for (int j = bottomLeft.getY(); j <= topRight.getY(); j++) {
+					for (int k = bottomLeft.getZ(); k <= topRight.getZ(); k++) {
 						shouldUpdateMesh |= addPosition(new Vec3i(i, j, k));
-			if (shouldUpdateMesh)
+					}
+				}
+			}
+			if (shouldUpdateMesh) {
 				updateMesh();
+			}
 		}
 	}
+
 	private boolean addPosition(@NotNull Vec3i pos) {
 		if (positionCounts.containsKey(pos)) {
 			positionCounts.get(pos).count.increment();
@@ -98,18 +115,24 @@ public class MeshRenderer extends Renderer {
 		);
 		positionCounts.put(pos, newInfo);
 
-		if (up != null)
+		if (up != null) {
 			up.down = true;
-		if (down != null)
+		}
+		if (down != null) {
 			down.up = true;
-		if (north != null)
+		}
+		if (north != null) {
 			north.south = true;
-		if (south != null)
+		}
+		if (south != null) {
 			south.north = true;
-		if (east != null)
+		}
+		if (east != null) {
 			east.west = true;
-		if (west != null)
+		}
+		if (west != null) {
 			west.east = true;
+		}
 
 		return true;
 	}
@@ -117,21 +140,29 @@ public class MeshRenderer extends Renderer {
 	public void removePositions(@NotNull Vec3i bottomLeft, @NotNull Vec3i topRight) {
 		synchronized (positionCounts) {
 			boolean shouldUpdateMesh = false;
-			for (int i = bottomLeft.getX(); i <= topRight.getX(); i++)
-				for (int j = bottomLeft.getY(); j <= topRight.getY(); j++)
-					for (int k = bottomLeft.getZ(); k <= topRight.getZ(); k++)
+			for (int i = bottomLeft.getX(); i <= topRight.getX(); i++) {
+				for (int j = bottomLeft.getY(); j <= topRight.getY(); j++) {
+					for (int k = bottomLeft.getZ(); k <= topRight.getZ(); k++) {
 						shouldUpdateMesh |= removePosition(new Vec3i(i, j, k));
-			if (shouldUpdateMesh)
+					}
+				}
+			}
+			if (shouldUpdateMesh) {
 				updateMesh();
+			}
 		}
 	}
+
 	private boolean removePosition(@NotNull Vec3i pos) {
-		if (!positionCounts.containsKey(pos))
+		if (!positionCounts.containsKey(pos)) {
 			return false;
+		}
 
 		PositionInfo info = positionCounts.get(pos);
 		info.count.decrement();
-		if (info.count.intValue() > 0) return false;
+		if (info.count.intValue() > 0) {
+			return false;
+		}
 
 		positionCounts.remove(pos);
 
@@ -142,39 +173,44 @@ public class MeshRenderer extends Renderer {
 				east = positionCounts.get(pos.offset(Direction.EAST, 1)),
 				west = positionCounts.get(pos.offset(Direction.WEST, 1));
 
-		if (up != null)
+		if (up != null) {
 			up.down = false;
-		if (down != null)
+		}
+		if (down != null) {
 			down.up = false;
-		if (north != null)
+		}
+		if (north != null) {
 			north.south = false;
-		if (south != null)
+		}
+		if (south != null) {
 			south.north = false;
-		if (east != null)
+		}
+		if (east != null) {
 			east.west = false;
-		if (west != null)
+		}
+		if (west != null) {
 			west.east = false;
+		}
 
 		return true;
 	}
 
 	@Override
 	public void render() {
-		RenderSystem.enableBlend();
-		RenderSystem.blendFunc(GL32.GL_SRC_ALPHA, GL32.GL_ONE_MINUS_SRC_ALPHA);
+		enableTransparency();
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
 
 		buffer.begin(DRAW_MODE, VertexFormats.POSITION_COLOR);
 
-		for (Face face : meshFaces)
+		for (Face face : meshFaces) {
 			addFace(buffer, Vec3d.of(face.pos).add(OFFSET), ONE, face.dir, color);
+		}
 
 		tessellator.draw();
 
-		RenderSystem.defaultBlendFunc();
-		RenderSystem.disableBlend();
+		disableTransparency();
 	}
 
 	public void clear() {

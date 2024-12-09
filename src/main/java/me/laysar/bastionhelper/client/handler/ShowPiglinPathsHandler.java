@@ -1,10 +1,13 @@
 package me.laysar.bastionhelper.client.handler;
 
-import com.mojang.datafixers.util.Either;
 import me.laysar.bastionhelper.client.network.ClientEventEmitter;
 import me.laysar.bastionhelper.client.render.BlockOutlineRenderer;
 import me.laysar.bastionhelper.client.render.PathRenderer;
 import me.laysar.bastionhelper.client.render.RenderGroup;
+import me.laysar.bastionhelper.handler.AggroLevelsHandler.PiglinAggroLevel;
+import me.laysar.bastionhelper.network.packets.S2CCreatePiglinPath;
+import me.laysar.bastionhelper.network.packets.S2CRemovePiglinPath;
+import me.laysar.bastionhelper.network.packets.S2CUpdatePiglinPath;
 import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
@@ -14,18 +17,19 @@ import net.minecraft.util.math.BlockPos;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import me.laysar.bastionhelper.handler.ShowPiglinPathsHandler.PiglinAggroLevel;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ShowPiglinPathsHandler {
+
 	public static boolean showPaths = false;
 
 	private static class TargetLocationRenderer {
+
 		public final BlockPos blockPos;
 		public final BlockOutlineRenderer renderer;
 		private final Map<Integer, PiglinAggroLevel> piglinAggroLevels = new HashMap<>();
@@ -39,19 +43,27 @@ public class ShowPiglinPathsHandler {
 
 		public void setAggroLevel(int id, @NotNull PiglinAggroLevel newAggroLevel) {
 			PiglinAggroLevel prevAggroLevel = piglinAggroLevels.put(id, newAggroLevel);
-			if (prevAggroLevel == newAggroLevel) return;
+			if (prevAggroLevel == newAggroLevel) {
+				return;
+			}
 
-			if (prevAggroLevel != null)
+			if (prevAggroLevel != null) {
 				aggroLevelCounts.get(prevAggroLevel).decrement();
+			}
 			aggroLevelCounts.get(newAggroLevel).increment();
 			updateColor();
 		}
+
 		public boolean removeAggroLevel(int id) {
 			PiglinAggroLevel removedAggroLevel = piglinAggroLevels.remove(id);
-			if (removedAggroLevel == null) return false;
+			if (removedAggroLevel == null) {
+				return false;
+			}
 
 			aggroLevelCounts.get(removedAggroLevel).decrement();
-			if (aggroLevelCounts.values().stream().allMatch(v -> v.intValue() == 0)) return true;
+			if (aggroLevelCounts.values().stream().allMatch(v -> v.intValue() == 0)) {
+				return true;
+			}
 			updateColor();
 			return false;
 		}
@@ -71,6 +83,7 @@ public class ShowPiglinPathsHandler {
 			this.renderer.setColor(colorOf(maxAggroLevel.get()));
 		}
 	}
+
 	private static final RenderGroup<BlockOutlineRenderer> targetRenderGroup = new RenderGroup<>(50, RenderGroup.RenderOption.FRONT);
 	private static final RenderGroup<PathRenderer> pathfindingRenderGroup = new RenderGroup<>(50, RenderGroup.RenderOption.FRONT);
 
@@ -79,117 +92,147 @@ public class ShowPiglinPathsHandler {
 
 	private static final Map<BlockPos, TargetLocationRenderer> targetLocationRenderers = new HashMap<>();
 
+	private record Action(@Nullable S2CCreatePiglinPath create, @Nullable S2CUpdatePiglinPath update,
+						  @Nullable S2CRemovePiglinPath remove) {
 
-	private record CreateAction(int id, int currentNodeIndex, BlockPos[] positions, BlockPos target, PiglinAggroLevel aggroLevel) {}
-	private record UpdateAction(int id, int currentNodeIndex, PiglinAggroLevel aggroLevel) {}
-	private static final List<Either<CreateAction, UpdateAction>> queuedActions = Collections.synchronizedList(new ArrayList<>());
+		public Action(@NotNull S2CCreatePiglinPath create) {
+			this(create, null, null);
+		}
+
+		public Action(@NotNull S2CUpdatePiglinPath update) {
+			this(null, update, null);
+		}
+
+		public Action(@NotNull S2CRemovePiglinPath remove) {
+			this(null, null, remove);
+		}
+
+		public void apply() {
+			if (create != null) {
+				createPath(create.id(), create.positions(), create.currentNodeIndex(), create.target());
+			} else if (update != null) {
+				updatePath(update.id(), update.currentNodeIndex());
+			} else if (remove != null) {
+				removePath(remove.id());
+			}
+		}
+	}
+
+	private static final List<Action> queuedActions = Collections.synchronizedList(new ArrayList<>());
 
 	public static void run() {
 		ClientEventEmitter.showPiglinPaths();
 
 		showPaths = !showPaths;
-		if (!showPaths)
+		if (!showPaths) {
 			clear();
+		}
 	}
 
-	public static void create(@NotNull PacketContext ctx, @NotNull PacketByteBuf buf) {
-		if (!showPaths) return;
-
-		int id = buf.readInt();
-		int currentNodeIndex = buf.readInt();
-		int length = buf.readInt();
-
-		BlockPos[] positions = new BlockPos[length];
-		for (int i = 0; i < length; i++)
-			positions[i] = buf.readBlockPos();
-
-		BlockPos target = buf.readBlockPos();
-
-		PiglinAggroLevel aggroLevel = PiglinAggroLevel.fromInt(buf.readInt());
-
-		queuedActions.add(Either.left(new CreateAction(id, currentNodeIndex, positions, target, aggroLevel)));
-	}
-
-	public static void update(@NotNull PacketContext ctx, @NotNull PacketByteBuf buf) {
-		if (!showPaths) return;
-
-		int id = buf.readInt();
-		int currentNodeIndex = buf.readInt();
-
-		PiglinAggroLevel aggroLevel;
-		try {
-			aggroLevel = PiglinAggroLevel.fromInt(buf.readInt());
-		} catch (IndexOutOfBoundsException _e) {
-			aggroLevel = PiglinAggroLevel.NONE;
+	public static void create(@NotNull PacketContext _ctx, @NotNull PacketByteBuf buf) {
+		if (!showPaths) {
+			return;
 		}
 
-		queuedActions.add(Either.right(new UpdateAction(id, currentNodeIndex, aggroLevel)));
+		queuedActions.add(new Action(S2CCreatePiglinPath.fromBuf(buf)));
+	}
+
+	public static void update(@NotNull PacketContext _ctx, @NotNull PacketByteBuf buf) {
+		if (!showPaths) {
+			return;
+		}
+
+		queuedActions.add(new Action(S2CUpdatePiglinPath.fromBuf(buf)));
+	}
+
+	public static void remove(@NotNull PacketContext _ctx, @NotNull PacketByteBuf buf) {
+		if (!showPaths) {
+			return;
+		}
+
+		queuedActions.add(new Action(S2CRemovePiglinPath.fromBuf(buf)));
 	}
 
 	private static void processQueue() {
 		synchronized (queuedActions) {
-			for (Either<CreateAction, UpdateAction> either : queuedActions) {
-				either.map(ShowPiglinPathsHandler::createQueued, ShowPiglinPathsHandler::updateQueued);
-			}
+			queuedActions.forEach(Action::apply);
 			queuedActions.clear();
 		}
 	}
 
-	private static @Nullable Object createQueued(@NotNull CreateAction ac) {
-		createPath(ac.id, ac.positions, ac.target, ac.currentNodeIndex, ac.aggroLevel);
-		createTarget(ac.id, ac.target, ac.aggroLevel);
-		return null;
-	}
-
-	private static @Nullable Object updateQueued(@NotNull UpdateAction ac) {
-		if (ac.currentNodeIndex < 0) {
-			removePath(ac.id);
-			removeTarget(ac.id);
-		} else {
-			updatePath(ac.id, ac.currentNodeIndex, ac.aggroLevel);
-			updateTarget(ac.id, ac.aggroLevel);
+	private static void createPath(int id, @NotNull BlockPos[] positions, int currentNodeIndex, @NotNull BlockPos target) {
+		if (!showPaths) {
+			return;
 		}
-		return null;
-	}
-
-	private static void createPath(int id, @NotNull BlockPos[] positions, @NotNull BlockPos target, int currentNodeIndex, PiglinAggroLevel aggroLevel) {
-		if (!showPaths) return;
 
 		ClientWorld world = MinecraftClient.getInstance().world;
-		if (world == null) return;
-		if (!(world.getEntityById(id) instanceof LivingEntity entity)) return;
+		if (world == null) {
+			return;
+		}
+		if (!(world.getEntityById(id) instanceof LivingEntity entity)) {
+			return;
+		}
 
 		removePath(id);
 
+		PiglinAggroLevel aggroLevel = AggroLevelsHandler.getAggroLevel(id);
 		PathRenderer newRenderer = new PathRenderer(entity, positions, currentNodeIndex, colorOf(aggroLevel));
 		piglinPathRenderers.put(id, newRenderer);
 		pathfindingRenderGroup.add(newRenderer);
+		createTarget(id, target, aggroLevel);
 	}
 
-	private static void updatePath(int id, int currentNodeIndex, @NotNull PiglinAggroLevel aggroLevel) {
-		if (!showPaths) return;
+	private static void updatePath(int id, int currentNodeIndex) {
+		if (!showPaths) {
+			return;
+		}
 
 		PathRenderer renderer = piglinPathRenderers.get(id);
-		if (renderer == null) return;
+		if (renderer == null) {
+			return;
+		}
 
 		renderer.setCurrentNodeIndex(currentNodeIndex);
+		PiglinAggroLevel aggroLevel = AggroLevelsHandler.getAggroLevel(id);
 		renderer.setColor(colorOf(aggroLevel));
 	}
 
-	private static void removePath(int id) {
-		if (!showPaths) return;
+	public static void removePath(int id) {
+		if (!showPaths) {
+			return;
+		}
 
 		PathRenderer prevRenderer = piglinPathRenderers.remove(id);
 		pathfindingRenderGroup.remove(prevRenderer);
 		removeTarget(id);
 	}
 
+	public static void refreshPath(int id, @NotNull PiglinAggroLevel aggroLevel) {
+		PathRenderer pathRenderer = piglinPathRenderers.get(id);
+		if (pathRenderer == null) {
+			return;
+		}
+		pathRenderer.setColor(colorOf(aggroLevel));
+
+		BlockPos target = piglinTargets.get(id);
+		if (target == null) {
+			return;
+		}
+
+		TargetLocationRenderer targetRenderer = targetLocationRenderers.get(target);
+		assert targetRenderer != null;
+
+		targetRenderer.setAggroLevel(id, aggroLevel);
+	}
+
 	private static void createTarget(int id, @NotNull BlockPos target, @NotNull PiglinAggroLevel aggroLevel) {
-		if (!showPaths) return;
+		if (!showPaths) {
+			return;
+		}
 
 		TargetLocationRenderer existingRenderer = targetLocationRenderers.get(target);
 		if (existingRenderer != null && existingRenderer.blockPos.equals(target)) {
-			updateTarget(id, aggroLevel);
+			updateTarget(id);
 			return;
 		}
 
@@ -204,26 +247,37 @@ public class ShowPiglinPathsHandler {
 		targetLocationRenderers.get(target).setAggroLevel(id, aggroLevel);
 	}
 
-	private static void updateTarget(int id, @NotNull PiglinAggroLevel newAggroLevel) {
-		if (!showPaths) return;
+	private static void updateTarget(int id) {
+		if (!showPaths) {
+			return;
+		}
 
 		BlockPos target = piglinTargets.get(id);
-		if (target == null) return;
+		if (target == null) {
+			return;
+		}
 
 		TargetLocationRenderer renderer = targetLocationRenderers.get(target);
 		assert renderer != null;
 
-		renderer.setAggroLevel(id, newAggroLevel);
+		PiglinAggroLevel aggroLevel = AggroLevelsHandler.getAggroLevel(id);
+		renderer.setAggroLevel(id, aggroLevel);
 	}
 
 	private static void removeTarget(int id) {
-		if (!showPaths) return;
+		if (!showPaths) {
+			return;
+		}
 
 		BlockPos removedPiglinTarget = piglinTargets.remove(id);
-		if (removedPiglinTarget == null) return;
+		if (removedPiglinTarget == null) {
+			return;
+		}
 
 		TargetLocationRenderer info = targetLocationRenderers.get(removedPiglinTarget);
-		if (info == null) return;
+		if (info == null) {
+			return;
+		}
 
 		boolean isEmpty = info.removeAggroLevel(id);
 		if (isEmpty) {
@@ -245,7 +299,9 @@ public class ShowPiglinPathsHandler {
 	}
 
 	public static void render() {
-		if (!showPaths) return;
+		if (!showPaths) {
+			return;
+		}
 
 		pathfindingRenderGroup.render();
 		targetRenderGroup.render();

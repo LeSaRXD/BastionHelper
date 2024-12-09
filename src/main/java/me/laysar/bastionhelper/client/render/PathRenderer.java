@@ -19,6 +19,7 @@ public class PathRenderer extends Renderer {
 	public void setCurrentNodeIndex(int value) {
 		currentNodeIndex = value;
 	}
+
 	public void setColor(Color value) {
 		color = value;
 	}
@@ -32,6 +33,8 @@ public class PathRenderer extends Renderer {
 
 	@Override
 	public void render() {
+		enableTransparency();
+
 		BlockPos firstPos;
 		try {
 			firstPos = positions[currentNodeIndex + 1];
@@ -55,5 +58,7 @@ public class PathRenderer extends Renderer {
 			this.addVertex(buffer, blockToVec(to), color);
 		}
 		tessellator.draw();
+
+		disableTransparency();
 	}
 }

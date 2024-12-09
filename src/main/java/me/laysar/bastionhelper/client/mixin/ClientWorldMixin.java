@@ -1,6 +1,5 @@
-package me.laysar.bastionhelper.mixin;
+package me.laysar.bastionhelper.client.mixin;
 
-import me.laysar.bastionhelper.BastionHelper;
 import me.laysar.bastionhelper.client.handler.ShowLavaDeadzonesHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -14,9 +13,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ClientWorldMixin extends WorldMixin {
 	@Override
 	protected void onBlockChanged(@NotNull BlockPos pos, @NotNull BlockState oldBlock, @NotNull BlockState newBlock, CallbackInfo ci) {
-		if (newBlock.isOf(Blocks.LAVA))
+		if (newBlock.isOf(Blocks.LAVA)) {
 			ShowLavaDeadzonesHandler.addLava(pos);
-		else if (oldBlock.isOf(Blocks.LAVA))
+		} else if (oldBlock.isOf(Blocks.LAVA)) {
 			ShowLavaDeadzonesHandler.removeLava(pos);
+		}
 	}
 }

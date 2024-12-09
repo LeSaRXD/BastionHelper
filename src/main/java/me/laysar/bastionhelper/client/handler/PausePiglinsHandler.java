@@ -6,20 +6,23 @@ import net.minecraft.network.PacketByteBuf;
 
 public class PausePiglinsHandler {
 	private static boolean paused = false;
+
 	public static boolean isPaused() {
 		return paused;
 	}
 
 	public static void run() {
-		if (paused)
+		if (paused) {
 			ClientEventEmitter.unpausePiglins();
-		else
+		} else {
 			ClientEventEmitter.pausePiglins();
+		}
 	}
 
 	public static void pause(PacketContext _ctx, PacketByteBuf _buf) {
 		paused = true;
 	}
+
 	public static void unpause(PacketContext _ctx, PacketByteBuf _buf) {
 		paused = false;
 	}

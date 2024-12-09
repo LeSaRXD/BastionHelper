@@ -17,16 +17,20 @@ public class RenderGroup<R extends Renderer> extends Renderer {
 		BACK_NO_CULL(2),
 		FRONT_NO_CULL(3);
 		final int value;
+
 		RenderOption(int value) {
 			this.value = value;
 		}
+
 		public boolean front() {
 			return ((this.value >> 0) & 1) > 0;
 		}
+
 		public boolean cull() {
 			return ((this.value >> 1) & 1) > 0;
 		}
 	}
+
 	public RenderOption option;
 
 	public RenderGroup(int capacity, RenderOption option) {
@@ -37,15 +41,17 @@ public class RenderGroup<R extends Renderer> extends Renderer {
 
 	@Override
 	public void render() {
-		if (option.front())
+		if (option.front()) {
 			GlStateManager.disableDepthTest();
-		else
+		} else {
 			GlStateManager.enableDepthTest();
+		}
 
-		if (option.cull())
+		if (option.cull()) {
 			GlStateManager.disableCull();
-		else
+		} else {
 			GlStateManager.enableCull();
+		}
 
 		synchronized (renderers) {
 			for (Renderer renderer : renderers)
@@ -57,8 +63,9 @@ public class RenderGroup<R extends Renderer> extends Renderer {
 	}
 
 	public void add(R renderer) {
-		if (renderers.size() < capacity)
+		if (renderers.size() < capacity) {
 			renderers.add(renderer);
+		}
 	}
 
 	public void remove(R renderer) {

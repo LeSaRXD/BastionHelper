@@ -18,7 +18,8 @@
     ]
   },
   "mixins": [
-    "bastionhelper.mixins.json"
+    "bastionhelper.mixins.json",
+    "bastionhelper.client.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",

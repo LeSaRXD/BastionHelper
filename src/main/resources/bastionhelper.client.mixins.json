@@ -1,0 +1,19 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "me.laysar.bastionhelper.client.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"client": [
+		"DummyProfilerMixin",
+		"GameRendererMixin",
+		"MinecraftClientMixin",
+		"LivingEntityRendererMixin",
+		"PiglinEntityRendererMixin",
+		"InGameHudMixin",
+		"WorldMixin",
+		"ClientWorldMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

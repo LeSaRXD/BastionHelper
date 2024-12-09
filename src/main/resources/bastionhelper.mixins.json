@@ -6,17 +6,8 @@
 	"mixins": [
 		"LivingEntityMixin",
 		"PiglinEntityMixin",
-		"PiglinNavigationMixin"
-	],
-	"client": [
-		"DummyProfilerMixin",
-		"GameRendererMixin",
-		"MinecraftClientMixin",
-		"LivingEntityRendererMixin",
-		"PiglinEntityRendererMixin",
-		"InGameHudMixin",
-		"WorldMixin",
-		"ClientWorldMixin"
+		"PiglinNavigationMixin",
+		"MinecraftServerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

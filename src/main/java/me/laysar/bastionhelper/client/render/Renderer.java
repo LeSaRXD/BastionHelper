@@ -1,15 +1,13 @@
 package me.laysar.bastionhelper.client.render;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.BakedQuadFactory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.opengl.GL32;
 
 import java.awt.*;
 
@@ -108,5 +106,14 @@ public abstract class Renderer {
 						.color(comps[0], comps[1], comps[2], comps[3]).next();
 			}
 		}
+	}
+
+	protected void enableTransparency() {
+		RenderSystem.enableBlend();
+		RenderSystem.blendFunc(GL32.GL_SRC_ALPHA, GL32.GL_ONE_MINUS_SRC_ALPHA);
+	}
+
+	protected void disableTransparency() {
+		RenderSystem.disableBlend();
 	}
 }

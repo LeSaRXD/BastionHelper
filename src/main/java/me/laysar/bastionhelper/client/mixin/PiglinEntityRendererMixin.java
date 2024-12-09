@@ -1,8 +1,7 @@
-package me.laysar.bastionhelper.mixin;
+package me.laysar.bastionhelper.client.mixin;
 
 import me.laysar.bastionhelper.client.handler.PausePiglinsHandler;
 import net.minecraft.client.render.entity.PiglinEntityRenderer;
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(PiglinEntityRenderer.class)

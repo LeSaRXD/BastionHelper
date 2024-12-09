@@ -1,4 +1,4 @@
-package me.laysar.bastionhelper.mixin;
+package me.laysar.bastionhelper.client.mixin;
 
 import me.laysar.bastionhelper.client.handler.ShowLavaDeadzonesHandler;
 import me.laysar.bastionhelper.client.handler.ShowPiglinPathsHandler;

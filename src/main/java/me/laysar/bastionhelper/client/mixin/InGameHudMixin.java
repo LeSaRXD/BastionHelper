@@ -1,4 +1,4 @@
-package me.laysar.bastionhelper.mixin;
+package me.laysar.bastionhelper.client.mixin;
 
 import me.laysar.bastionhelper.client.handler.AggroLevelsHandler;
 import net.minecraft.client.MinecraftClient;
@@ -19,16 +19,19 @@ import java.awt.*;
 
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin {
-	@Shadow public abstract TextRenderer getFontRenderer();
 
-	@Shadow private int scaledWidth;
-	@Shadow private int scaledHeight;
+	@Shadow
+	public abstract TextRenderer getFontRenderer();
 
-	@Shadow @Final private MinecraftClient client;
+	@Shadow
+	@Final
+	private MinecraftClient client;
 
 	@Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;F)V", at = @At("TAIL"))
-	void onRender(MatrixStack matrixStack, float tickDelta, CallbackInfo ci) {
-		if (this.client.options.hudHidden) return;
+	void afterRender(MatrixStack matrixStack, float tickDelta, CallbackInfo ci) {
+		if (this.client.options.hudHidden) {
+			return;
+		}
 		TextRenderer fontRenderer = this.getFontRenderer();
 		float scaledWidth = this.client.getWindow().getScaledWidth(),
 				scaledHeight = this.client.getWindow().getScaledHeight();

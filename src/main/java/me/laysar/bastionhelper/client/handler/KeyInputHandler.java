@@ -1,15 +1,13 @@
 package me.laysar.bastionhelper.client.handler;
 
-import me.laysar.bastionhelper.client.network.ClientEventEmitter;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyInputHandler {
+
 	public static String KEY_CATEGORY = "key.category.bastionhelper";
 	public static String KEY_HIGHLIGHT_PIGLINS = "key.bastionhelper.highlight_piglins";
 	public static String KEY_SHOW_PIGLIN_PATHS = "key.bastionhelper.show_piglin_paths";
@@ -53,17 +51,25 @@ public class KeyInputHandler {
 	private static void registerKeyInputs() {
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			// singleplayer-only keybinds
-			if (!client.isInSingleplayer()) return;
-			if (client.player == null || client.world == null) return;
+			if (!client.isInSingleplayer()) {
+				return;
+			}
+			if (client.player == null || client.world == null) {
+				return;
+			}
 
-			if (highlightPiglinsKey.wasPressed())
+			if (highlightPiglinsKey.wasPressed()) {
 				HighlightPiglinsHandler.run();
-			if (showPiglinPathfindingKey.wasPressed())
+			}
+			if (showPiglinPathfindingKey.wasPressed()) {
 				ShowPiglinPathsHandler.run();
-			if (pausePiglinsKey.wasPressed())
+			}
+			if (pausePiglinsKey.wasPressed()) {
 				PausePiglinsHandler.run();
-			if (showLavaDeadzonesKey.wasPressed())
+			}
+			if (showLavaDeadzonesKey.wasPressed()) {
 				ShowLavaDeadzonesHandler.run();
+			}
 		});
 	}
 }

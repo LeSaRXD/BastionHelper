@@ -1,7 +1,6 @@
-package me.laysar.bastionhelper.mixin;
+package me.laysar.bastionhelper.client.mixin;
 
 import net.minecraft.client.render.entity.LivingEntityRenderer;
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;

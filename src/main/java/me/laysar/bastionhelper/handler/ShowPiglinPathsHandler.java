@@ -10,29 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ShowPiglinPathsHandler {
-	public enum PiglinAggroLevel {
-		NONE(0),
-		LIGHT(1),
-		MEDIUM(2),
-		GOLD_DISTRACTED(3),
-		HEAVY(4);
-
-		private final int value;
-		public int toInt() {
-			return this.value;
-		}
-		public static PiglinAggroLevel fromInt(int value) {
-			for (PiglinAggroLevel level : values()) {
-				if (level.value == value)
-					return level;
-			}
-			return NONE;
-		}
-
-		PiglinAggroLevel(int value) {
-			this.value = value;
-		}
-	}
 
 	private static final Map<Integer, Integer> sentNodeIndexes = new HashMap<>();
 	private static PlayerEntity subscribedPlayer = null;
@@ -46,28 +23,38 @@ public class ShowPiglinPathsHandler {
 		}
 	}
 
-	public static void create(int id, @Nullable Path path, PiglinAggroLevel aggroLevel) {
-		if (subscribedPlayer == null) return;
-		if (path == null) return;
+	public static void create(int id, @Nullable Path path) {
+		if (subscribedPlayer == null) {
+			return;
+		}
+		if (path == null) {
+			return;
+		}
 
-		ServerEventEmitter.createPiglinPath(subscribedPlayer, id, path, aggroLevel.toInt());
+		ServerEventEmitter.createPiglinPath(subscribedPlayer, id, path);
 		sentNodeIndexes.put(id, path.getCurrentNodeIndex());
 	}
 
-	public static void update(int id, @Nullable Path path, PiglinAggroLevel aggroLevel) {
-		if (subscribedPlayer == null ||
-				path == null) return;
+	public static void update(int id, @Nullable Path path) {
+		if (subscribedPlayer == null || path == null) {
+			return;
+		}
 
 		Integer sentNodeIndex = sentNodeIndexes.get(id);
-		if (sentNodeIndex == null) create(id, path, aggroLevel);
-		else if (sentNodeIndex == path.getCurrentNodeIndex()) return;
+		if (sentNodeIndex == null) {
+			create(id, path);
+		} else if (sentNodeIndex == path.getCurrentNodeIndex()) {
+			return;
+		}
 
-		ServerEventEmitter.updatePiglinPath(subscribedPlayer, id, path.getCurrentNodeIndex(), aggroLevel.toInt());
+		ServerEventEmitter.updatePiglinPath(subscribedPlayer, id, path.getCurrentNodeIndex());
 		sentNodeIndexes.put(id, path.getCurrentNodeIndex());
 	}
 
 	public static void remove(int id) {
-		if (subscribedPlayer == null) return;
+		if (subscribedPlayer == null) {
+			return;
+		}
 
 		ServerEventEmitter.removePiglinPath(subscribedPlayer, id);
 		sentNodeIndexes.remove(id);
