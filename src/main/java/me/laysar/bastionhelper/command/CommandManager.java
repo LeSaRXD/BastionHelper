@@ -1,12 +1,37 @@
 package me.laysar.bastionhelper.command;
 
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import me.laysar.bastionhelper.handler.CreativeFollowHandler;
+import me.laysar.bastionhelper.handler.PausePiglinsHandler;
+import me.laysar.bastionhelper.handler.ShowPiglinPathsHandler;
+import me.laysar.bastionhelper.network.ServerEventEmitter;
+import net.minecraft.server.command.ServerCommandSource;
+import org.jetbrains.annotations.NotNull;
 
 public class CommandManager {
 	public static void register() {
-		CommandRegistrationCallback.EVENT.register(HighlightPiglinsCommand::register);
-		CommandRegistrationCallback.EVENT.register(ShowPiglinPathsCommand::register);
-		CommandRegistrationCallback.EVENT.register(PausePiglinsCommand::register);
-		CommandRegistrationCallback.EVENT.register(CreativeFollowCommand::register);
+		new LiteralCommand("highlight", CommandManager::highlightPiglins);
+		new LiteralCommand("pause", CommandManager::pausePiglins);
+		new LiteralCommand("paths", CommandManager::showPaths);
+		new LiteralCommand("follow", CommandManager::creativeFollow);
+	}
+
+	private static int highlightPiglins(@NotNull CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+		ServerEventEmitter.toggleHighlights(ctx.getSource().getPlayer());
+		return Command.SINGLE_SUCCESS;
+	}
+	private static int pausePiglins(@NotNull CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+		PausePiglinsHandler.run(ctx.getSource().getPlayer());
+		return Command.SINGLE_SUCCESS;
+	}
+	private static int showPaths(@NotNull CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+		ShowPiglinPathsHandler.run(ctx.getSource().getPlayer());
+		return Command.SINGLE_SUCCESS;
+	}
+	private static int creativeFollow(@NotNull CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+		CreativeFollowHandler.run(ctx.getSource().getPlayer());
+		return Command.SINGLE_SUCCESS;
 	}
 }

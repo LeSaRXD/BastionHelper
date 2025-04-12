@@ -22,5 +22,4 @@ public class BastionHelper implements ModInitializer {
 		ServerEventReceiver.register();
 		CommandManager.register();
 	}
-
 }
