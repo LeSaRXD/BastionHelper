@@ -7,5 +7,6 @@ public class CommandManager {
 		CommandRegistrationCallback.EVENT.register(HighlightPiglinsCommand::register);
 		CommandRegistrationCallback.EVENT.register(ShowPiglinPathsCommand::register);
 		CommandRegistrationCallback.EVENT.register(PausePiglinsCommand::register);
+		CommandRegistrationCallback.EVENT.register(CreativeFollowCommand::register);
 	}
 }

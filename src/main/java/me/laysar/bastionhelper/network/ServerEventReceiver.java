@@ -1,5 +1,6 @@
 package me.laysar.bastionhelper.network;
 
+import me.laysar.bastionhelper.handler.CreativeFollowHandler;
 import me.laysar.bastionhelper.handler.HighlightPiglinsHandler;
 import me.laysar.bastionhelper.handler.PausePiglinsHandler;
 import me.laysar.bastionhelper.handler.ShowPiglinPathsHandler;
@@ -21,5 +22,11 @@ public class ServerEventReceiver {
 
 		ServerSidePacketRegistry.INSTANCE.register(PacketIds.UNPAUSE_PIGLINS,
 				(ctx, _buf) -> PausePiglinsHandler.unpause(ctx.getPlayer()));
+
+		ServerSidePacketRegistry.INSTANCE.register(PacketIds.CREATIVE_FOLLOW,
+				(ctx, _buf) -> CreativeFollowHandler.follow(ctx.getPlayer()));
+
+		ServerSidePacketRegistry.INSTANCE.register(PacketIds.CREATIVE_UNFOLLOW,
+				(ctx, _buf) -> CreativeFollowHandler.unfollow(ctx.getPlayer()));
 	}
 }

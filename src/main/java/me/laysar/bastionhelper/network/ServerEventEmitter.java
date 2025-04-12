@@ -54,4 +54,12 @@ public class ServerEventEmitter {
 	public static void removeAggroLevel(@NotNull PlayerEntity player, int id) {
 		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, REMOVE_AGGRO_LEVEL, new S2CRemoveAggroLevel(id).toBuf());
 	}
+
+	public static void confirmFollow(@NotNull PlayerEntity player) {
+		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, CREATIVE_FOLLOW, empty());
+	}
+
+	public static void confirmUnfollow(@NotNull PlayerEntity player) {
+		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, CREATIVE_UNFOLLOW, empty());
+	}
 }

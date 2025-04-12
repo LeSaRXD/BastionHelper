@@ -7,6 +7,9 @@
 		"LivingEntityMixin",
 		"PiglinEntityMixin",
 		"PiglinNavigationMixin",
+		"PiglinBrainMixin",
+		"PiglinSpecificSensorMixin",
+		"PiglinForgetAttackTargetTaskMixin",
 		"MinecraftServerMixin"
 	],
 	"injectors": {

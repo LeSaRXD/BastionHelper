@@ -13,11 +13,13 @@ public class KeyInputHandler {
 	public static String KEY_SHOW_PIGLIN_PATHS = "key.bastionhelper.show_piglin_paths";
 	public static String KEY_PAUSE_PIGLINS = "key.bastionhelper.pause_piglins";
 	public static String KEY_SHOW_LAVA_DEADZONES = "key.bastionhelper.show_lava_deadzones";
+	public static String KEY_CREATIVE_FOLLOW = "key.bastionhelper.creative_follow";
 
 	public static KeyBinding highlightPiglinsKey;
 	public static KeyBinding showPiglinPathfindingKey;
 	public static KeyBinding pausePiglinsKey;
 	public static KeyBinding showLavaDeadzonesKey;
+	public static KeyBinding creativeFollowKey;
 
 	public static void register() {
 		highlightPiglinsKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -42,6 +44,12 @@ public class KeyInputHandler {
 				KEY_SHOW_LAVA_DEADZONES,
 				InputUtil.Type.KEYSYM,
 				GLFW.GLFW_KEY_L,
+				KEY_CATEGORY
+		));
+		creativeFollowKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+				KEY_CREATIVE_FOLLOW,
+				InputUtil.Type.KEYSYM,
+				GLFW.GLFW_KEY_K,
 				KEY_CATEGORY
 		));
 
@@ -69,6 +77,9 @@ public class KeyInputHandler {
 			}
 			if (showLavaDeadzonesKey.wasPressed()) {
 				ShowLavaDeadzonesHandler.run();
+			}
+			if (creativeFollowKey.wasPressed()) {
+				CreativeFollowHandler.run();
 			}
 		});
 	}

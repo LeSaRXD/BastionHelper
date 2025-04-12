@@ -25,4 +25,12 @@ public class ClientEventEmitter {
 	public static void unpausePiglins() {
 		ClientSidePacketRegistry.INSTANCE.sendToServer(UNPAUSE_PIGLINS, empty());
 	}
+
+	public static void creativeFollow() {
+		ClientSidePacketRegistry.INSTANCE.sendToServer(CREATIVE_FOLLOW, empty());
+	}
+
+	public static void creativeUnfollow() {
+		ClientSidePacketRegistry.INSTANCE.sendToServer(CREATIVE_UNFOLLOW, empty());
+	}
 }

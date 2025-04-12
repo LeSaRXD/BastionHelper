@@ -86,20 +86,20 @@ public class AggroLevelsHandler {
 
 		if (brain.hasMemoryModule(MemoryModuleType.ADMIRING_ITEM)) return PiglinAggroLevel.GOLD_DISTRACTED;
 
-		boolean lightAnger, mediumAnger = false, heavyAnger = false, goldDistracted;
+		boolean mediumAnger = false, heavyAnger = false;
 
-		lightAnger = brain.hasMemoryModule(MemoryModuleType.NEAREST_TARGETABLE_PLAYER_NOT_WEARING_GOLD);
+		boolean lightAnger = brain.hasMemoryModule(MemoryModuleType.NEAREST_TARGETABLE_PLAYER_NOT_WEARING_GOLD);
 
 		Optional<UUID> playerUuid = brain.getOptionalMemory(MemoryModuleType.ANGRY_AT);
 		if (playerUuid.isPresent()) {
 			ServerPlayerEntity player = (ServerPlayerEntity) piglin.getEntityWorld().getPlayerByUuid(playerUuid.get());
-			if (player != null && player.interactionManager.getGameMode().isSurvivalLike()) {
+			if (player != null && (player.interactionManager.getGameMode().isSurvivalLike() || CreativeFollowHandler.isFollow())) {
 				mediumAnger = true;
 				heavyAnger = brain.getOptionalMemory(MemoryModuleType.ADMIRING_DISABLED).orElse(false);
 			}
 		}
 
-		goldDistracted = brain.hasMemoryModule(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM);
+		boolean goldDistracted = brain.hasMemoryModule(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM);
 
 		if (heavyAnger) return PiglinAggroLevel.HEAVY;
 		if (goldDistracted) return PiglinAggroLevel.GOLD_DISTRACTED;

@@ -1,9 +1,6 @@
 package me.laysar.bastionhelper.client.network;
 
-import me.laysar.bastionhelper.client.handler.AggroLevelsHandler;
-import me.laysar.bastionhelper.client.handler.HighlightPiglinsHandler;
-import me.laysar.bastionhelper.client.handler.PausePiglinsHandler;
-import me.laysar.bastionhelper.client.handler.ShowPiglinPathsHandler;
+import me.laysar.bastionhelper.client.handler.*;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 
 import static me.laysar.bastionhelper.network.PacketIds.*;
@@ -19,5 +16,7 @@ public class ClientEventReceiver {
 		ClientSidePacketRegistry.INSTANCE.register(UNPAUSE_PIGLINS, PausePiglinsHandler::unpause);
 		ClientSidePacketRegistry.INSTANCE.register(UPDATE_AGGRO_LEVEL, AggroLevelsHandler::update);
 		ClientSidePacketRegistry.INSTANCE.register(REMOVE_AGGRO_LEVEL, AggroLevelsHandler::remove);
+		ClientSidePacketRegistry.INSTANCE.register(CREATIVE_FOLLOW, CreativeFollowHandler::follow);
+		ClientSidePacketRegistry.INSTANCE.register(CREATIVE_UNFOLLOW, CreativeFollowHandler::unfollow);
 	}
 }
