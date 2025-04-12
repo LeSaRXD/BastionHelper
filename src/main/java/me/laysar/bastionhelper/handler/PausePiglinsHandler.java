@@ -1,7 +1,10 @@
 package me.laysar.bastionhelper.handler;
 
 import me.laysar.bastionhelper.network.ServerEventEmitter;
+import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
 public class PausePiglinsHandler {
@@ -12,7 +15,7 @@ public class PausePiglinsHandler {
 		return paused;
 	}
 
-	public static void run(@NotNull PlayerEntity player) {
+	public static void run(@NotNull ServerPlayerEntity player) {
 		paused = !paused;
 		if (paused) {
 			ServerEventEmitter.confirmPause(player);
@@ -21,19 +24,19 @@ public class PausePiglinsHandler {
 		}
 	}
 
-	public static void pause(@NotNull PlayerEntity player) {
+	public static void pause(@NotNull PacketContext ctx, @NotNull PacketByteBuf _buf) {
 		if (paused) {
 			return;
 		}
 		paused = true;
-		ServerEventEmitter.confirmPause(player);
+		ServerEventEmitter.confirmPause(ctx.getPlayer());
 	}
 
-	public static void unpause(@NotNull PlayerEntity player) {
+	public static void unpause(@NotNull PacketContext ctx, @NotNull PacketByteBuf _buf) {
 		if (!paused) {
 			return;
 		}
 		paused = false;
-		ServerEventEmitter.confirmUnpause(player);
+		ServerEventEmitter.confirmUnpause(ctx.getPlayer());
 	}
 }

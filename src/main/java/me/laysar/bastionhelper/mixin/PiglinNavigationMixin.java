@@ -37,8 +37,13 @@ public abstract class PiglinNavigationMixin {
 
 	@Inject(method = "tick()V", at = @At("HEAD"))
 	void onTick(CallbackInfo ci) {
-		if (this.entity.world.isClient
-				|| !(this.entity instanceof PiglinEntity piglin)) {
+		if (this.entity.world.isClient) {
+			return;
+		}
+		if (!(this.entity instanceof PiglinEntity piglin)) {
+			return;
+		}
+		if (!piglin.isAdult()) {
 			return;
 		}
 
@@ -62,6 +67,9 @@ public abstract class PiglinNavigationMixin {
 		if (!(this.entity instanceof PiglinEntity piglin)) {
 			return original;
 		}
+		if (!piglin.isAdult()) {
+			return original;
+		}
 
 		ticksUntilRemoved.setValue(-1L);
 
@@ -74,10 +82,13 @@ public abstract class PiglinNavigationMixin {
 		if (this.entity.world.isClient) {
 			return;
 		}
-		if (this.currentPath == null) {
+		if (!(this.entity instanceof PiglinEntity piglin)) {
 			return;
 		}
-		if (!(this.entity instanceof PiglinEntity piglin)) {
+		if (!piglin.isAdult()) {
+			return;
+		}
+		if (this.currentPath == null) {
 			return;
 		}
 
@@ -93,14 +104,22 @@ public abstract class PiglinNavigationMixin {
 		if (!(this.entity instanceof PiglinEntity piglin)) {
 			return;
 		}
+		if (!piglin.isAdult()) {
+			return;
+		}
 
 		ShowPiglinPathsHandler.update(piglin.getEntityId(), this.getCurrentPath());
 	}
 
 	@Inject(method = "stop()V", at = @At("HEAD"))
 	void onRemovePath(CallbackInfo ci) {
-		if (this.entity.world.isClient
-				|| !(this.entity instanceof PiglinEntity)) {
+		if (this.entity.world.isClient) {
+			return;
+		}
+		if (!(this.entity instanceof PiglinEntity piglin)) {
+			return;
+		}
+		if (!piglin.isAdult()) {
 			return;
 		}
 

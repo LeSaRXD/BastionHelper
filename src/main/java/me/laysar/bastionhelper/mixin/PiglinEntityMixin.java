@@ -1,12 +1,8 @@
 package me.laysar.bastionhelper.mixin;
 
 import me.laysar.bastionhelper.handler.AggroLevelsHandler;
-import me.laysar.bastionhelper.handler.HighlightPiglinsHandler;
 import me.laysar.bastionhelper.handler.PausePiglinsHandler;
 import me.laysar.bastionhelper.handler.ShowPiglinPathsHandler;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.PiglinEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -31,30 +27,17 @@ public abstract class PiglinEntityMixin extends LivingEntityMixin {
 
 	@Override
 	protected void onTick(CallbackInfo ci) {
-		applyGlowing();
 		updateAggroLevel();
 		pause(ci);
-	}
-
-	@Unique
-	private void applyGlowing() {
-		if (((LivingEntity) (Object) this).world.isClient) {
-			return;
-		}
-
-		if (HighlightPiglinsHandler.isHighlighted()) {
-			if (!this.hasStatusEffect(StatusEffects.GLOWING)) {
-				this.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, Integer.MAX_VALUE, 0, true, false));
-			}
-		} else {
-			this.removeStatusEffect(StatusEffects.GLOWING);
-		}
 	}
 
 	@Unique
 	private void updateAggroLevel() {
 		PiglinEntity piglin = (PiglinEntity) (Object) this;
 		if (piglin.world.isClient) {
+			return;
+		}
+		if (!piglin.isAdult()) {
 			return;
 		}
 

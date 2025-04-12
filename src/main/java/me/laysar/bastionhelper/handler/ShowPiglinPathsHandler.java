@@ -1,8 +1,10 @@
 package me.laysar.bastionhelper.handler;
 
 import me.laysar.bastionhelper.network.ServerEventEmitter;
+import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.entity.ai.pathing.Path;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,6 +23,10 @@ public class ShowPiglinPathsHandler {
 			subscribedPlayer = null;
 			sentNodeIndexes.clear();
 		}
+	}
+
+	public static void toggle(@NotNull PacketContext ctx, @NotNull PacketByteBuf buf) {
+		run(ctx.getPlayer());
 	}
 
 	public static void create(int id, @Nullable Path path) {
@@ -58,10 +64,5 @@ public class ShowPiglinPathsHandler {
 
 		ServerEventEmitter.removePiglinPath(subscribedPlayer, id);
 		sentNodeIndexes.remove(id);
-	}
-
-	public static void clear() {
-		sentNodeIndexes.clear();
-		subscribedPlayer = null;
 	}
 }
