@@ -8,8 +8,10 @@ import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.mob.PiglinEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.util.*;
 
 public class AggroLevelsHandler {
@@ -35,6 +37,18 @@ public class AggroLevelsHandler {
 			return NONE;
 		}
 
+		@Contract(pure = true)
+		public Color toColor() {
+			final Color ORANGE = new Color(255, 127, 0, 255);
+			return switch (this) {
+				case NONE -> new Color(1.0f, 1.0f, 1.0f, 0.5f);
+				case LIGHT -> Color.YELLOW;
+				case MEDIUM -> ORANGE;
+				case HEAVY -> Color.RED;
+				case GOLD_DISTRACTED -> Color.GREEN;
+			};
+		}
+
 		PiglinAggroLevel(int value) {
 			this.value = value;
 		}
@@ -55,7 +69,7 @@ public class AggroLevelsHandler {
 		int id = piglin.getEntityId();
 		tickPiglins.add(id);
 
-		PiglinAggroLevel aggroLevel = piglinAggroLevel(piglin);
+		PiglinAggroLevel aggroLevel = getAggroLevel(piglin);
 
 		for (ServerPlayerEntity player : getServerPlayers(piglin))
 			ServerEventEmitter.updateAggroLevel(player, id, aggroLevel);
@@ -81,10 +95,14 @@ public class AggroLevelsHandler {
 		tickPiglins.clear();
 	}
 
-	public static PiglinAggroLevel piglinAggroLevel(@NotNull PiglinEntity piglin) {
+	public static PiglinAggroLevel getAggroLevel(@NotNull PiglinEntity piglin) {
 		Brain<PiglinEntity> brain = piglin.getBrain();
 
 		if (brain.hasMemoryModule(MemoryModuleType.ADMIRING_ITEM)) return PiglinAggroLevel.GOLD_DISTRACTED;
+
+		if (!piglin.isAdult()) {
+			return PiglinAggroLevel.NONE;
+		}
 
 		boolean mediumAnger = false, heavyAnger = false;
 

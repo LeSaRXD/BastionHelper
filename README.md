@@ -13,5 +13,5 @@ Planned features:
 - [x] Piglin pausing
 - [x] Aggro'd piglin counter
 - [ ] Piglin pathfinding deadzones (from lava, etc.)
-- [ ] Piglin aggro toggle in creative (force them to follow you in creative mode)
+- [x] Piglin aggro toggle in creative (force them to follow you in creative mode)
 - [ ] Probably more stuff im forgetting

@@ -8,6 +8,10 @@ import org.jetbrains.annotations.NotNull;
 public class HighlightPiglinsHandler {
 	private static boolean highlighted = false;
 
+	public static boolean getHighlighted() {
+		return highlighted;
+	}
+
 	public static void run() {
 		if (highlighted) {
 			ClientEventEmitter.lowlightPiglins();

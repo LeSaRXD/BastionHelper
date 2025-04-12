@@ -11,7 +11,8 @@
 		"PiglinEntityRendererMixin",
 		"InGameHudMixin",
 		"WorldMixin",
-		"ClientWorldMixin"
+		"ClientWorldMixin",
+		"WorldRendererMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

@@ -79,7 +79,7 @@ public class ShowPiglinPathsHandler {
 					.map(Map.Entry::getKey);
 
 			assert maxAggroLevel.isPresent();
-			this.renderer.setColor(colorOf(maxAggroLevel.get()));
+			this.renderer.setColor(maxAggroLevel.get().toColor());
 		}
 	}
 
@@ -175,7 +175,7 @@ public class ShowPiglinPathsHandler {
 		removePath(id);
 
 		PiglinAggroLevel aggroLevel = AggroLevelsHandler.getAggroLevel(id);
-		PathRenderer newRenderer = new PathRenderer(entity, positions, currentNodeIndex, colorOf(aggroLevel));
+		PathRenderer newRenderer = new PathRenderer(entity, positions, currentNodeIndex, aggroLevel.toColor());
 		piglinPathRenderers.put(id, newRenderer);
 		pathfindingRenderGroup.add(newRenderer);
 		createTarget(id, target, aggroLevel);
@@ -193,7 +193,7 @@ public class ShowPiglinPathsHandler {
 
 		renderer.setCurrentNodeIndex(currentNodeIndex);
 		PiglinAggroLevel aggroLevel = AggroLevelsHandler.getAggroLevel(id);
-		renderer.setColor(colorOf(aggroLevel));
+		renderer.setColor(aggroLevel.toColor());
 	}
 
 	public static void removePath(int id) {
@@ -211,7 +211,7 @@ public class ShowPiglinPathsHandler {
 		if (pathRenderer == null) {
 			return;
 		}
-		pathRenderer.setColor(colorOf(aggroLevel));
+		pathRenderer.setColor(aggroLevel.toColor());
 
 		BlockPos target = piglinTargets.get(id);
 		if (target == null) {
@@ -306,16 +306,5 @@ public class ShowPiglinPathsHandler {
 		targetRenderGroup.render();
 
 		processQueue();
-	}
-
-	@Contract(pure = true)
-	private static Color colorOf(@NotNull PiglinAggroLevel aggroLevel) {
-		return switch (aggroLevel) {
-			case NONE -> new Color(1.0f, 1.0f, 1.0f, 0.5f);
-			case LIGHT -> Color.YELLOW;
-			case MEDIUM -> Color.ORANGE;
-			case HEAVY -> Color.RED;
-			case GOLD_DISTRACTED -> Color.GREEN;
-		};
 	}
 }
