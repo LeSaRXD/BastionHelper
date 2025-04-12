@@ -3,6 +3,7 @@ package me.laysar.bastionhelper.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import me.laysar.bastionhelper.handler.BabyPiglinGrowUpHandler;
 import me.laysar.bastionhelper.handler.CreativeFollowHandler;
 import me.laysar.bastionhelper.handler.PausePiglinsHandler;
 import me.laysar.bastionhelper.handler.ShowPiglinPathsHandler;
@@ -16,6 +17,7 @@ public class CommandManager {
 		new LiteralCommand("pause", CommandManager::pausePiglins);
 		new LiteralCommand("paths", CommandManager::showPaths);
 		new LiteralCommand("follow", CommandManager::creativeFollow);
+		new LiteralCommand("growup", CommandManager::growUp);
 	}
 
 	private static int highlightPiglins(@NotNull CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
@@ -32,6 +34,10 @@ public class CommandManager {
 	}
 	private static int creativeFollow(@NotNull CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
 		CreativeFollowHandler.run(ctx.getSource().getPlayer());
+		return Command.SINGLE_SUCCESS;
+	}
+	private static int growUp(@NotNull CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+		BabyPiglinGrowUpHandler.run(ctx.getSource().getPlayer());
 		return Command.SINGLE_SUCCESS;
 	}
 }

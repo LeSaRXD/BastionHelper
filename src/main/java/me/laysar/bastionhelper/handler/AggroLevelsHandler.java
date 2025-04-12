@@ -100,7 +100,7 @@ public class AggroLevelsHandler {
 
 		if (brain.hasMemoryModule(MemoryModuleType.ADMIRING_ITEM)) return PiglinAggroLevel.GOLD_DISTRACTED;
 
-		if (!piglin.isAdult()) {
+		if (piglin.isBaby()) {
 			return PiglinAggroLevel.NONE;
 		}
 

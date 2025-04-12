@@ -26,7 +26,7 @@ public abstract class MinecraftClientMixin {
 		if (!(entity instanceof PiglinEntity piglin)) {
 			return original;
 		}
-		if (!piglin.isAdult()) {
+		if (piglin.isBaby()) {
 			return original;
 		}
 

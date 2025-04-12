@@ -37,7 +37,7 @@ public abstract class PiglinEntityMixin extends LivingEntityMixin {
 		if (piglin.world.isClient) {
 			return;
 		}
-		if (!piglin.isAdult()) {
+		if (piglin.isBaby()) {
 			return;
 		}
 

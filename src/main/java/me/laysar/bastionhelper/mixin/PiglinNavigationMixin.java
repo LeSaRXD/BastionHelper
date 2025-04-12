@@ -43,7 +43,7 @@ public abstract class PiglinNavigationMixin {
 		if (!(this.entity instanceof PiglinEntity piglin)) {
 			return;
 		}
-		if (!piglin.isAdult()) {
+		if (piglin.isBaby()) {
 			return;
 		}
 
@@ -67,7 +67,7 @@ public abstract class PiglinNavigationMixin {
 		if (!(this.entity instanceof PiglinEntity piglin)) {
 			return original;
 		}
-		if (!piglin.isAdult()) {
+		if (piglin.isBaby()) {
 			return original;
 		}
 
@@ -85,7 +85,7 @@ public abstract class PiglinNavigationMixin {
 		if (!(this.entity instanceof PiglinEntity piglin)) {
 			return;
 		}
-		if (!piglin.isAdult()) {
+		if (piglin.isBaby()) {
 			return;
 		}
 		if (this.currentPath == null) {
@@ -104,7 +104,7 @@ public abstract class PiglinNavigationMixin {
 		if (!(this.entity instanceof PiglinEntity piglin)) {
 			return;
 		}
-		if (!piglin.isAdult()) {
+		if (piglin.isBaby()) {
 			return;
 		}
 
@@ -119,7 +119,7 @@ public abstract class PiglinNavigationMixin {
 		if (!(this.entity instanceof PiglinEntity piglin)) {
 			return;
 		}
-		if (!piglin.isAdult()) {
+		if (piglin.isBaby()) {
 			return;
 		}
 
