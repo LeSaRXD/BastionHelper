@@ -1,6 +1,6 @@
 package me.laysar.bastionhelper.client;
 
-import me.laysar.bastionhelper.client.handler.KeyInputHandler;
+import me.laysar.bastionhelper.client.keyboard.KeyInputManager;
 import me.laysar.bastionhelper.client.network.ClientEventReceiver;
 import net.fabricmc.api.ClientModInitializer;
 
@@ -11,7 +11,7 @@ public class BastionHelperClient implements ClientModInitializer {
 	}
 
 	private void registerAll() {
-		KeyInputHandler.register();
+		KeyInputManager.register();
 		ClientEventReceiver.register();
 	}
 }
