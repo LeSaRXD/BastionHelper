@@ -25,4 +25,8 @@ public class ClientEventEmitter {
 	public static void creativeUnfollow() {
 		ClientSidePacketRegistry.INSTANCE.sendToServer(CREATIVE_UNFOLLOW, empty());
 	}
+
+	public static void growUpPiglins() {
+		ClientSidePacketRegistry.INSTANCE.sendToServer(GROW_UP_PIGLINS, empty());
+	}
 }

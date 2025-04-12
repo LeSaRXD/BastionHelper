@@ -15,4 +15,5 @@ public class PacketIds {
 	public static final Identifier REMOVE_AGGRO_LEVEL = new Identifier(BastionHelper.MOD_ID, "remove_aggro_level");
 	public static final Identifier CREATIVE_FOLLOW = new Identifier(BastionHelper.MOD_ID, "creative_follow");
 	public static final Identifier CREATIVE_UNFOLLOW = new Identifier(BastionHelper.MOD_ID, "creative_unfollow");
+	public static final Identifier GROW_UP_PIGLINS = new Identifier(BastionHelper.MOD_ID, "grow_up");
 }

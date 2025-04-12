@@ -1,5 +1,6 @@
 package me.laysar.bastionhelper.client.handler;
 
+import me.laysar.bastionhelper.client.network.ClientEventEmitter;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.options.KeyBinding;
@@ -14,12 +15,14 @@ public class KeyInputHandler {
 	public static String KEY_PAUSE_PIGLINS = "key.bastionhelper.pause_piglins";
 	public static String KEY_SHOW_LAVA_DEADZONES = "key.bastionhelper.show_lava_deadzones";
 	public static String KEY_CREATIVE_FOLLOW = "key.bastionhelper.creative_follow";
+	public static String KEY_GROW_UP_PIGLINS = "key.bastionhelper.grow_up_piglins";
 
 	public static KeyBinding highlightPiglinsKey;
 	public static KeyBinding showPiglinPathfindingKey;
 	public static KeyBinding pausePiglinsKey;
 	public static KeyBinding showLavaDeadzonesKey;
 	public static KeyBinding creativeFollowKey;
+	public static KeyBinding growUpPiglinsKey;
 
 	public static void register() {
 		highlightPiglinsKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -52,6 +55,12 @@ public class KeyInputHandler {
 				GLFW.GLFW_KEY_K,
 				KEY_CATEGORY
 		));
+		growUpPiglinsKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+				KEY_GROW_UP_PIGLINS,
+				InputUtil.Type.KEYSYM,
+				GLFW.GLFW_KEY_G,
+				KEY_CATEGORY
+		));
 
 		registerKeyInputs();
 	}
@@ -80,6 +89,9 @@ public class KeyInputHandler {
 			}
 			if (creativeFollowKey.wasPressed()) {
 				CreativeFollowHandler.run();
+			}
+			if (growUpPiglinsKey.wasPressed()) {
+				ClientEventEmitter.growUpPiglins();
 			}
 		});
 	}
