@@ -17,7 +17,7 @@ public class KeyInputManager {
 		KeyBind[] keyBinds = new KeyBind[] {
 				new KeyBind(HIGHLIGHT_PIGLINS, GLFW.GLFW_KEY_O, HighlightPiglinsHandler::run),
 				new KeyBind(SHOW_PIGLIN_PATHS, GLFW.GLFW_KEY_I, ShowPiglinPathsHandler::run),
-				new KeyBind(PAUSE_PIGLINS, GLFW.GLFW_KEY_P, ShowPiglinPathsHandler::run),
+				new KeyBind(PAUSE_PIGLINS, GLFW.GLFW_KEY_P, PausePiglinsHandler::run),
 				new KeyBind(CREATIVE_FOLLOW, GLFW.GLFW_KEY_K, CreativeFollowHandler::run),
 				new KeyBind(GROW_UP_PIGLINS, GLFW.GLFW_KEY_G, ClientEventEmitter::growUpPiglins),
 		};
