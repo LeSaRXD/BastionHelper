@@ -11,7 +11,6 @@
 		"PiglinEntityRendererMixin",
 		"InGameHudMixin",
 		"WorldMixin",
-		"ClientWorldMixin",
 		"WorldRendererMixin"
 	],
 	"injectors": {

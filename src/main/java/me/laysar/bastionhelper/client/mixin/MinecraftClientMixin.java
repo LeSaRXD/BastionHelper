@@ -18,7 +18,6 @@ public abstract class MinecraftClientMixin {
 	@Inject(method = "disconnect()V", at = @At("HEAD"))
 	private void onDisconnect(CallbackInfo ci) {
 		ShowPiglinPathsHandler.clear();
-		ShowLavaDeadzonesHandler.clear();
 	}
 
 	@ModifyReturnValue(method = "method_27022(Lnet/minecraft/entity/Entity;)Z", at = @At("RETURN"))

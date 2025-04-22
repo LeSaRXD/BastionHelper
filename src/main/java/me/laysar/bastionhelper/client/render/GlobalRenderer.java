@@ -32,7 +32,6 @@ public class GlobalRenderer extends Renderer {
 		GlStateManager.disableDepthTest();
 
 		ShowPiglinPathsHandler.render();
-		ShowLavaDeadzonesHandler.render();
 
 		RenderSystem.popMatrix();
 	}
