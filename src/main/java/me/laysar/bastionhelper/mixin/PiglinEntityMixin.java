@@ -51,11 +51,5 @@ public abstract class PiglinEntityMixin extends LivingEntityMixin {
 		}
 
 		ci.cancel();
-
-		PiglinEntity piglin = (PiglinEntity) (Object) this;
-		if (piglin.world.isClient) {
-			return;
-		}
-		piglin.getNavigation().tick();
 	}
 }

@@ -30,6 +30,10 @@ public class ShowPiglinPathsHandler {
 	}
 
 	public static void create(int id, @Nullable Path path) {
+		if (PausePiglinsHandler.isPaused()) {
+			return;
+		}
+
 		if (subscribedPlayer == null) {
 			return;
 		}
@@ -42,6 +46,10 @@ public class ShowPiglinPathsHandler {
 	}
 
 	public static void update(int id, @Nullable Path path) {
+		if (PausePiglinsHandler.isPaused()) {
+			return;
+		}
+
 		if (subscribedPlayer == null || path == null) {
 			return;
 		}
@@ -58,6 +66,10 @@ public class ShowPiglinPathsHandler {
 	}
 
 	public static void remove(int id) {
+		if (PausePiglinsHandler.isPaused()) {
+			return;
+		}
+
 		if (subscribedPlayer == null) {
 			return;
 		}
