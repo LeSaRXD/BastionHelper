@@ -2,8 +2,10 @@ package me.laysar.bastionhelper.mixin;
 
 import me.laysar.bastionhelper.handler.AggroLevelsHandler;
 import me.laysar.bastionhelper.handler.PausePiglinsHandler;
+import me.laysar.bastionhelper.handler.PiglinDeathHandler;
 import me.laysar.bastionhelper.handler.ShowPiglinPathsHandler;
 import net.minecraft.entity.mob.PiglinEntity;
+import net.minecraft.server.world.ServerWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -13,7 +15,7 @@ public abstract class PiglinEntityMixin extends LivingEntityMixin {
 	@Override
 	protected void afterSetHealth(float health, CallbackInfo ci) {
 		PiglinEntity piglin = (PiglinEntity) (Object) this;
-		if (piglin.world.isClient) {
+		if (!(piglin.world instanceof ServerWorld world)) {
 			return;
 		}
 
@@ -23,6 +25,7 @@ public abstract class PiglinEntityMixin extends LivingEntityMixin {
 
 		AggroLevelsHandler.remove(piglin);
 		ShowPiglinPathsHandler.remove(piglin.getEntityId());
+		PiglinDeathHandler.run(piglin, world);
 	}
 
 	@Override

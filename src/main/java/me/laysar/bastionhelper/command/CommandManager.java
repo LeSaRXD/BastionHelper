@@ -2,10 +2,7 @@ package me.laysar.bastionhelper.command;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import me.laysar.bastionhelper.handler.BabyPiglinGrowUpHandler;
-import me.laysar.bastionhelper.handler.CreativeFollowHandler;
-import me.laysar.bastionhelper.handler.PausePiglinsHandler;
-import me.laysar.bastionhelper.handler.ShowPiglinPathsHandler;
+import me.laysar.bastionhelper.handler.*;
 import me.laysar.bastionhelper.network.ServerEventEmitter;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +16,7 @@ public class CommandManager {
 		new LiteralCommand("paths", CommandManager::showPaths);
 		new LiteralCommand("follow", CommandManager::creativeFollow);
 		new LiteralCommand("growup", CommandManager::growUp);
+		new LiteralCommand("deathmessages", CommandManager::toggleDeathMessages);
 	}
 
 	private static int highlightPiglins(@NotNull CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
@@ -39,6 +37,10 @@ public class CommandManager {
 	}
 	private static int growUp(@NotNull CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
 		BabyPiglinGrowUpHandler.run(ctx.getSource().getPlayer());
+		return SINGLE_SUCCESS;
+	}
+	private static int toggleDeathMessages(@NotNull CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+		PiglinDeathHandler.toggle();
 		return SINGLE_SUCCESS;
 	}
 }
