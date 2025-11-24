@@ -10,7 +10,6 @@
 		"LivingEntityRendererMixin",
 		"PiglinEntityRendererMixin",
 		"InGameHudMixin",
-		"WorldMixin",
 		"WorldRendererMixin"
 	],
 	"injectors": {

@@ -44,4 +44,8 @@ public class AggroLevelsHandler {
 	public static PiglinAggroLevel getAggroLevel(int id) {
 		return Objects.requireNonNullElse(aggroLevels.get(id), PiglinAggroLevel.NONE);
 	}
+
+	public static void clear() {
+		aggroLevels.clear();
+	}
 }

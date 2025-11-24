@@ -2,8 +2,8 @@ package me.laysar.bastionhelper.client.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import me.laysar.bastionhelper.client.handler.AggroLevelsHandler;
 import me.laysar.bastionhelper.client.handler.HighlightPiglinsHandler;
-import me.laysar.bastionhelper.client.handler.ShowLavaDeadzonesHandler;
 import me.laysar.bastionhelper.client.handler.ShowPiglinPathsHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
@@ -18,6 +18,7 @@ public abstract class MinecraftClientMixin {
 	@Inject(method = "disconnect()V", at = @At("HEAD"))
 	private void onDisconnect(CallbackInfo ci) {
 		ShowPiglinPathsHandler.clear();
+		AggroLevelsHandler.clear();
 	}
 
 	@ModifyReturnValue(method = "method_27022(Lnet/minecraft/entity/Entity;)Z", at = @At("RETURN"))
