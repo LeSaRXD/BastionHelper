@@ -35,6 +35,10 @@ public class ServerEventEmitter {
 		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, REMOVE_PIGLIN_PATH, new S2CRemovePiglinPath(id).toBuf());
 	}
 
+	public static void togglePaths(@NotNull PlayerEntity player) {
+		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, SHOW_PIGLIN_PATHS, empty());
+	}
+
 	public static void confirmPause(@NotNull PlayerEntity player) {
 		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, PAUSE_PIGLINS, empty());
 	}

@@ -6,10 +6,6 @@ import static me.laysar.bastionhelper.network.PacketIds.*;
 import static me.laysar.bastionhelper.network.packets.Helper.empty;
 
 public class ClientEventEmitter {
-	public static void showPiglinPaths() {
-		ClientSidePacketRegistry.INSTANCE.sendToServer(SHOW_PIGLIN_PATHS, empty());
-	}
-
 	public static void pausePiglins() {
 		ClientSidePacketRegistry.INSTANCE.sendToServer(PAUSE_PIGLINS, empty());
 	}

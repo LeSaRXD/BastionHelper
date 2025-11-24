@@ -24,7 +24,7 @@ public abstract class PiglinEntityMixin extends LivingEntityMixin {
 		}
 
 		AggroLevelsHandler.remove(piglin);
-		ShowPiglinPathsHandler.remove(piglin.getEntityId());
+		ShowPiglinPathsHandler.remove(piglin.getEntityId(), world.getServer().getPlayerManager().getPlayerList());
 		PiglinDeathHandler.run(piglin, world);
 	}
 

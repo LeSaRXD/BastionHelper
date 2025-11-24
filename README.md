@@ -1,7 +1,7 @@
 # Bastion Helper Mod
 
 > [!IMPORTANT]
-> This mod requires **JAVA 17** or above
+> This mod requires **JAVA 17** or above and [speedrunAPI](https://github.com/contariaa/SpeedrunAPI) 2.0 or above
 
 This mod aims to improve the experience when creating tech for bastions
 

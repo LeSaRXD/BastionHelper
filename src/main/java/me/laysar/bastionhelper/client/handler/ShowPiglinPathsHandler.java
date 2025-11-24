@@ -1,6 +1,5 @@
 package me.laysar.bastionhelper.client.handler;
 
-import me.laysar.bastionhelper.client.network.ClientEventEmitter;
 import me.laysar.bastionhelper.client.render.BlockOutlineRenderer;
 import me.laysar.bastionhelper.client.render.PathRenderer;
 import me.laysar.bastionhelper.client.render.RenderGroup;
@@ -15,7 +14,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import org.apache.commons.lang3.mutable.MutableInt;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +23,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ShowPiglinPathsHandler {
-
 	public static boolean showPaths = false;
 
 	private static class TargetLocationRenderer {
@@ -93,7 +90,6 @@ public class ShowPiglinPathsHandler {
 
 	private record Action(@Nullable S2CCreatePiglinPath create, @Nullable S2CUpdatePiglinPath update,
 						  @Nullable S2CRemovePiglinPath remove) {
-
 		public Action(@NotNull S2CCreatePiglinPath create) {
 			this(create, null, null);
 		}
@@ -119,36 +115,23 @@ public class ShowPiglinPathsHandler {
 
 	private static final List<Action> queuedActions = Collections.synchronizedList(new ArrayList<>());
 
-	public static void run() {
-		ClientEventEmitter.showPiglinPaths();
+	public static void run(@NotNull PacketContext _ctx, @NotNull PacketByteBuf _buf) {
+		toggle();
+	}
 
+	public static void toggle() {
 		showPaths = !showPaths;
-		if (!showPaths) {
-			clear();
-		}
 	}
 
 	public static void create(@NotNull PacketContext _ctx, @NotNull PacketByteBuf buf) {
-		if (!showPaths) {
-			return;
-		}
-
 		queuedActions.add(new Action(S2CCreatePiglinPath.fromBuf(buf)));
 	}
 
 	public static void update(@NotNull PacketContext _ctx, @NotNull PacketByteBuf buf) {
-		if (!showPaths) {
-			return;
-		}
-
 		queuedActions.add(new Action(S2CUpdatePiglinPath.fromBuf(buf)));
 	}
 
 	public static void remove(@NotNull PacketContext _ctx, @NotNull PacketByteBuf buf) {
-		if (!showPaths) {
-			return;
-		}
-
 		queuedActions.add(new Action(S2CRemovePiglinPath.fromBuf(buf)));
 	}
 
@@ -160,10 +143,6 @@ public class ShowPiglinPathsHandler {
 	}
 
 	private static void createPath(int id, @NotNull BlockPos[] positions, int currentNodeIndex, @NotNull BlockPos target) {
-		if (!showPaths) {
-			return;
-		}
-
 		ClientWorld world = MinecraftClient.getInstance().world;
 		if (world == null) {
 			return;
@@ -182,10 +161,6 @@ public class ShowPiglinPathsHandler {
 	}
 
 	private static void updatePath(int id, int currentNodeIndex) {
-		if (!showPaths) {
-			return;
-		}
-
 		PathRenderer renderer = piglinPathRenderers.get(id);
 		if (renderer == null) {
 			return;
@@ -197,10 +172,6 @@ public class ShowPiglinPathsHandler {
 	}
 
 	public static void removePath(int id) {
-		if (!showPaths) {
-			return;
-		}
-
 		PathRenderer prevRenderer = piglinPathRenderers.remove(id);
 		pathfindingRenderGroup.remove(prevRenderer);
 		removeTarget(id);
@@ -225,10 +196,6 @@ public class ShowPiglinPathsHandler {
 	}
 
 	private static void createTarget(int id, @NotNull BlockPos target, @NotNull PiglinAggroLevel aggroLevel) {
-		if (!showPaths) {
-			return;
-		}
-
 		TargetLocationRenderer existingRenderer = targetLocationRenderers.get(target);
 		if (existingRenderer != null && existingRenderer.blockPos.equals(target)) {
 			updateTarget(id);
@@ -247,10 +214,6 @@ public class ShowPiglinPathsHandler {
 	}
 
 	private static void updateTarget(int id) {
-		if (!showPaths) {
-			return;
-		}
-
 		BlockPos target = piglinTargets.get(id);
 		if (target == null) {
 			return;
@@ -264,10 +227,6 @@ public class ShowPiglinPathsHandler {
 	}
 
 	private static void removeTarget(int id) {
-		if (!showPaths) {
-			return;
-		}
-
 		BlockPos removedPiglinTarget = piglinTargets.remove(id);
 		if (removedPiglinTarget == null) {
 			return;

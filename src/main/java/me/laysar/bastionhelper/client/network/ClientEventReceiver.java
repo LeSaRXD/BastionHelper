@@ -11,6 +11,7 @@ public class ClientEventReceiver {
 		ClientSidePacketRegistry.INSTANCE.register(CREATE_PIGLIN_PATH, ShowPiglinPathsHandler::create);
 		ClientSidePacketRegistry.INSTANCE.register(UPDATE_PIGLIN_PATH, ShowPiglinPathsHandler::update);
 		ClientSidePacketRegistry.INSTANCE.register(REMOVE_PIGLIN_PATH, ShowPiglinPathsHandler::remove);
+		ClientSidePacketRegistry.INSTANCE.register(SHOW_PIGLIN_PATHS, ShowPiglinPathsHandler::run);
 		ClientSidePacketRegistry.INSTANCE.register(PAUSE_PIGLINS, PausePiglinsHandler::pause);
 		ClientSidePacketRegistry.INSTANCE.register(UNPAUSE_PIGLINS, PausePiglinsHandler::unpause);
 		ClientSidePacketRegistry.INSTANCE.register(UPDATE_AGGRO_LEVEL, AggroLevelsHandler::update);

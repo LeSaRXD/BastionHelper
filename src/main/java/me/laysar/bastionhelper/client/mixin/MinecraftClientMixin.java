@@ -2,6 +2,7 @@ package me.laysar.bastionhelper.client.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import me.laysar.bastionhelper.BastionHelper;
 import me.laysar.bastionhelper.client.handler.AggroLevelsHandler;
 import me.laysar.bastionhelper.client.handler.HighlightPiglinsHandler;
 import me.laysar.bastionhelper.client.handler.ShowPiglinPathsHandler;
@@ -15,6 +16,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
+	@Inject(method = "joinWorld(Lnet/minecraft/client/world/ClientWorld;)V", at = @At("HEAD"))
+	private void onConnect(CallbackInfo ci) {
+		BastionHelper.config.reapply();
+	}
+
 	@Inject(method = "disconnect()V", at = @At("HEAD"))
 	private void onDisconnect(CallbackInfo ci) {
 		ShowPiglinPathsHandler.clear();

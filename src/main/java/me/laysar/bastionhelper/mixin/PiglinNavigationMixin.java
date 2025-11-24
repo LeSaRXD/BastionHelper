@@ -6,6 +6,9 @@ import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.ai.pathing.Path;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PiglinEntity;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.PlayerManager;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.apache.commons.lang3.mutable.MutableLong;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -16,12 +19,21 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mixin(EntityNavigation.class)
 public abstract class PiglinNavigationMixin {
 
 	@Shadow
 	@Final
 	protected MobEntity entity;
+	private List<ServerPlayerEntity> getPlayers() {
+		MinecraftServer server = this.entity.world.getServer();
+		if (server == null)
+			return new ArrayList<>();
+		return server.getPlayerManager().getPlayerList();
+	}
 
 	@Shadow
 	@Nullable
@@ -56,7 +68,7 @@ public abstract class PiglinNavigationMixin {
 			return;
 		}
 
-		ShowPiglinPathsHandler.remove(piglin.getEntityId());
+		ShowPiglinPathsHandler.remove(piglin.getEntityId(), this.getPlayers());
 	}
 
 	@ModifyReturnValue(method = "findPathToAny(Ljava/util/Set;IZI)Lnet/minecraft/entity/ai/pathing/Path;", at = @At("RETURN"))
@@ -73,7 +85,7 @@ public abstract class PiglinNavigationMixin {
 
 		ticksUntilRemoved.setValue(-1L);
 
-		ShowPiglinPathsHandler.create(piglin.getEntityId(), original);
+		ShowPiglinPathsHandler.create(piglin.getEntityId(), original, this.getPlayers());
 		return original;
 	}
 
@@ -92,7 +104,7 @@ public abstract class PiglinNavigationMixin {
 			return;
 		}
 
-		ShowPiglinPathsHandler.create(piglin.getEntityId(), this.currentPath);
+		ShowPiglinPathsHandler.create(piglin.getEntityId(), this.currentPath, this.getPlayers());
 	}
 
 	@Inject(method = "*",
@@ -108,7 +120,7 @@ public abstract class PiglinNavigationMixin {
 			return;
 		}
 
-		ShowPiglinPathsHandler.update(piglin.getEntityId(), this.getCurrentPath());
+		ShowPiglinPathsHandler.update(piglin.getEntityId(), this.getCurrentPath(), this.getPlayers());
 	}
 
 	@Inject(method = "stop()V", at = @At("HEAD"))

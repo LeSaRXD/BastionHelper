@@ -4,5 +4,8 @@
 	"key.bastionhelper.show_piglin_paths": "Toggle Piglin Paths",
 	"key.bastionhelper.pause_piglins": "Toggle Piglin Pause",
 	"key.bastionhelper.creative_follow": "Toggle Creative Follow",
-	"key.bastionhelper.grow_up_piglins": "Age Up Baby Piglins"
+	"key.bastionhelper.grow_up_piglins": "Age Up Baby Piglins",
+
+	"speedrunapi.config.bastionhelper.category.toggles": "Toggles",
+	"speedrunapi.config.bastionhelper.option.showPathfinding": "Show Piglin Pathfinding"
 }

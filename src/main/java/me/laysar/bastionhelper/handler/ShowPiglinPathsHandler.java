@@ -5,76 +5,68 @@ import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.entity.ai.pathing.Path;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ShowPiglinPathsHandler {
-
 	private static final Map<Integer, Integer> sentNodeIndexes = new HashMap<>();
-	private static PlayerEntity subscribedPlayer = null;
 
 	public static void run(@NotNull PlayerEntity player) {
-		if (subscribedPlayer == null) {
-			subscribedPlayer = player;
-		} else {
-			subscribedPlayer = null;
-			sentNodeIndexes.clear();
-		}
+		ServerEventEmitter.togglePaths(player);
 	}
 
-	public static void toggle(@NotNull PacketContext ctx, @NotNull PacketByteBuf buf) {
-		run(ctx.getPlayer());
-	}
-
-	public static void create(int id, @Nullable Path path) {
+	public static void create(int id, @Nullable Path path, List<ServerPlayerEntity> players) {
 		if (PausePiglinsHandler.isPaused()) {
 			return;
 		}
 
-		if (subscribedPlayer == null) {
+		if (players.isEmpty()) {
 			return;
 		}
 		if (path == null) {
 			return;
 		}
 
-		ServerEventEmitter.createPiglinPath(subscribedPlayer, id, path);
+		for (PlayerEntity subscribedPlayer : players)
+			ServerEventEmitter.createPiglinPath(subscribedPlayer, id, path);
 		sentNodeIndexes.put(id, path.getCurrentNodeIndex());
 	}
 
-	public static void update(int id, @Nullable Path path) {
+	public static void update(int id, @Nullable Path path, List<ServerPlayerEntity> players) {
 		if (PausePiglinsHandler.isPaused()) {
 			return;
 		}
 
-		if (subscribedPlayer == null || path == null) {
+		if (players.isEmpty() || path == null) {
 			return;
 		}
 
 		Integer sentNodeIndex = sentNodeIndexes.get(id);
 		if (sentNodeIndex == null) {
-			create(id, path);
+			create(id, path, players);
 		} else if (sentNodeIndex == path.getCurrentNodeIndex()) {
 			return;
 		}
 
-		ServerEventEmitter.updatePiglinPath(subscribedPlayer, id, path.getCurrentNodeIndex());
+		for (PlayerEntity subscribedPlayer : players)
+			ServerEventEmitter.updatePiglinPath(subscribedPlayer, id, path.getCurrentNodeIndex());
 		sentNodeIndexes.put(id, path.getCurrentNodeIndex());
 	}
 
-	public static void remove(int id) {
+	public static void remove(int id, List<ServerPlayerEntity> players) {
 		if (PausePiglinsHandler.isPaused()) {
 			return;
 		}
 
-		if (subscribedPlayer == null) {
+		if (players.isEmpty()) {
 			return;
 		}
 
-		ServerEventEmitter.removePiglinPath(subscribedPlayer, id);
+		for (PlayerEntity subscribedPlayer : players)
+			ServerEventEmitter.removePiglinPath(subscribedPlayer, id);
 		sentNodeIndexes.remove(id);
 	}
 }
