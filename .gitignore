@@ -10,6 +10,12 @@ out/
 # mpeltonen/sbt-idea plugin
 .idea_modules/
 
+# JDTLS
+.classpath
+.factorypath
+.project
+.settings
+
 # JIRA plugin
 atlassian-ide-plugin.xml
 

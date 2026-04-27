@@ -1,7 +1,7 @@
 # Bastion Helper Mod
 
 > [!IMPORTANT]
-> This mod requires **JAVA 17** or above, [speedrunAPI](https://github.com/contariaa/SpeedrunAPI) 2.0 or above, and [FabricAPI](https://modrinth.com/mod/fabric-api/versions?g=1.16.1)
+> This mod requires **JAVA 17** or above, [speedrunAPI](https://github.com/contariaa/SpeedrunAPI) 2.2 or above, and [FabricAPI](https://modrinth.com/mod/fabric-api/versions?g=1.16.1) 0.18.0 build 387
 
 This mod aims to improve the experience when creating tech for bastions
 
