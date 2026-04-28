@@ -16,4 +16,7 @@ public class PacketIds {
 	public static final Identifier CREATIVE_FOLLOW = new Identifier(BastionHelper.MOD_ID, "creative_follow");
 	public static final Identifier CREATIVE_UNFOLLOW = new Identifier(BastionHelper.MOD_ID, "creative_unfollow");
 	public static final Identifier GROW_UP_PIGLINS = new Identifier(BastionHelper.MOD_ID, "grow_up");
+	public static final Identifier ENABLE_DEATH_MESSAGES = new Identifier(BastionHelper.MOD_ID, "enable_death_messages");
+	public static final Identifier DISABLE_DEATH_MESSAGES = new Identifier(BastionHelper.MOD_ID,
+			"disable_death_messages");
 }

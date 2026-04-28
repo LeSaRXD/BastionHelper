@@ -1,5 +1,6 @@
 package me.laysar.bastionhelper.client.mixin;
 
+import me.laysar.bastionhelper.BastionHelper;
 import me.laysar.bastionhelper.client.handler.AggroLevelsHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -29,7 +30,7 @@ public abstract class InGameHudMixin {
 
 	@Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;F)V", at = @At("TAIL"))
 	void afterRender(MatrixStack matrixStack, float tickDelta, CallbackInfo ci) {
-		if (this.client.options.hudHidden) {
+		if (this.client.options.hudHidden || !BastionHelper.config.showOverlay) {
 			return;
 		}
 		TextRenderer fontRenderer = this.getFontRenderer();

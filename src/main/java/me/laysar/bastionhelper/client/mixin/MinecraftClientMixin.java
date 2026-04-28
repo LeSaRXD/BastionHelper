@@ -16,11 +16,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
-	@Inject(method = "joinWorld(Lnet/minecraft/client/world/ClientWorld;)V", at = @At("HEAD"))
-	private void onConnect(CallbackInfo ci) {
-		BastionHelper.config.reapply();
-	}
-
 	@Inject(method = "disconnect()V", at = @At("HEAD"))
 	private void onDisconnect(CallbackInfo ci) {
 		ShowPiglinPathsHandler.clear();
@@ -36,6 +31,6 @@ public abstract class MinecraftClientMixin {
 			return original;
 		}
 
-		return HighlightPiglinsHandler.getHighlighted() || original;
+		return HighlightPiglinsHandler.highlighted || original;
 	}
 }

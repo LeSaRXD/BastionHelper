@@ -8,6 +8,14 @@ import org.jetbrains.annotations.NotNull;
 public class CreativeFollowHandler {
 	private static boolean follow = false;
 
+	public static void setFollow(boolean value) {
+		if (value) {
+			ClientEventEmitter.creativeFollow();
+		} else {
+			ClientEventEmitter.creativeUnfollow();
+		}
+	}
+
 	public static void run() {
 		if (follow) {
 			ClientEventEmitter.creativeUnfollow();

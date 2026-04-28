@@ -22,13 +22,13 @@ public class ServerEventEmitter {
 				id,
 				path.getCurrentNodeIndex(),
 				path.getNodes().stream().map(PathNode::getPos).toList().toArray(new BlockPos[path.getLength()]),
-				path.getTarget()
-		);
+				path.getTarget());
 		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, CREATE_PIGLIN_PATH, packet.toBuf());
 	}
 
 	public static void updatePiglinPath(@NotNull PlayerEntity player, int id, int currentNodeIndex) {
-		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, UPDATE_PIGLIN_PATH, new S2CUpdatePiglinPath(id, currentNodeIndex).toBuf());
+		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, UPDATE_PIGLIN_PATH,
+				new S2CUpdatePiglinPath(id, currentNodeIndex).toBuf());
 	}
 
 	public static void removePiglinPath(@NotNull PlayerEntity player, int id) {
@@ -48,7 +48,8 @@ public class ServerEventEmitter {
 	}
 
 	public static void updateAggroLevel(@NotNull PlayerEntity player, int id, @NotNull PiglinAggroLevel aggroLevel) {
-		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, UPDATE_AGGRO_LEVEL, new S2CUpdateAggroLevel(id, aggroLevel).toBuf());
+		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, UPDATE_AGGRO_LEVEL,
+				new S2CUpdateAggroLevel(id, aggroLevel).toBuf());
 	}
 
 	public static void removeAggroLevel(@NotNull PlayerEntity player, int id) {

@@ -15,10 +15,9 @@ import java.awt.Color;
 
 @Mixin(WorldRenderer.class)
 public abstract class WorldRendererMixin {
-	@ModifyArgs(method = "render(Lnet/minecraft/client/util/math/MatrixStack;FJZLnet/minecraft/client/render/Camera;Lnet/minecraft/client/render/GameRenderer;Lnet/minecraft/client/render/LightmapTextureManager;Lnet/minecraft/util/math/Matrix4f;)V",
-	at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/OutlineVertexConsumerProvider;setColor(IIII)V"))
+	@ModifyArgs(method = "render(Lnet/minecraft/client/util/math/MatrixStack;FJZLnet/minecraft/client/render/Camera;Lnet/minecraft/client/render/GameRenderer;Lnet/minecraft/client/render/LightmapTextureManager;Lnet/minecraft/util/math/Matrix4f;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/OutlineVertexConsumerProvider;setColor(IIII)V"))
 	private void onSetOutlineColor(Args args, @Local(ordinal = 0) Entity entity) {
-		if (!HighlightPiglinsHandler.getHighlighted()) {
+		if (!HighlightPiglinsHandler.highlighted) {
 			return;
 		}
 		if (!(entity instanceof PiglinEntity piglin)) {

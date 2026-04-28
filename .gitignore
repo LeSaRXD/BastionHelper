@@ -15,6 +15,7 @@ out/
 .factorypath
 .project
 .settings
+bin/
 
 # JIRA plugin
 atlassian-ide-plugin.xml

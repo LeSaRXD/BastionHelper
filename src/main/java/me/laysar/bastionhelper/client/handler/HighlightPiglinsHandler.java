@@ -1,16 +1,11 @@
 package me.laysar.bastionhelper.client.handler;
 
-import me.laysar.bastionhelper.client.network.ClientEventEmitter;
 import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.network.PacketByteBuf;
 import org.jetbrains.annotations.NotNull;
 
 public class HighlightPiglinsHandler {
-	private static boolean highlighted = false;
-
-	public static boolean getHighlighted() {
-		return highlighted;
-	}
+	public static boolean highlighted = false;
 
 	public static void run() {
 		highlighted = !highlighted;

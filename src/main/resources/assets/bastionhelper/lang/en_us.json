@@ -6,6 +6,12 @@
 	"key.bastionhelper.creative_follow": "Toggle Creative Follow",
 	"key.bastionhelper.grow_up_piglins": "Age Up Baby Piglins",
 
-	"speedrunapi.config.bastionhelper.category.toggles": "Toggles",
-	"speedrunapi.config.bastionhelper.option.showPathfinding": "Show Piglin Pathfinding"
+	"speedrunapi.config.bastionhelper.category.ui": "UI & Chat",
+	"speedrunapi.config.bastionhelper.category.visuals": "Visuals",
+	"speedrunapi.config.bastionhelper.category.gameplay": "Gameplay",
+	"speedrunapi.config.bastionhelper.option.showPathfinding": "Show Piglin Pathfinding",
+	"speedrunapi.config.bastionhelper.option.showHighlights": "Highlight Piglins",
+	"speedrunapi.config.bastionhelper.option.showOverlay": "Show Piglin Count Overlay",
+	"speedrunapi.config.bastionhelper.option.creativeFollow": "Enable Creative Follow",
+	"speedrunapi.config.bastionhelper.option.deathMessages": "Enable Piglin Death Messages"
 }
