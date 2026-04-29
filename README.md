@@ -5,15 +5,20 @@
 
 This mod aims to improve the experience when creating tech for bastions
 
-Planned features:
+# Features
 
-- [x] Toggleable piglin glow
-- [x] Piglin pathfinding visualizer (akin to the ender dragon visualizer)
-- [x] Piglin targeted block highlight
-- [x] Piglin pausing
-- [x] Aggro'd piglin counter
-- [ ] Piglin pathfinding deadzones (from lava, etc.)
-- [x] Piglin aggro toggle in creative (force them to follow you in creative mode)
-- [x] Baby piglin replacement
-- [x] Piglin death messages with coords
-- [ ] Probably more stuff im forgetting
+- Toggleable piglin glow
+- Piglin pathfinding visualizer (akin to the ender dragon visualizer)
+- Piglin targeted block highlight
+- Piglin pausing
+- Aggro'd piglin counter
+- Piglin aggro toggle in creative (force them to follow you in creative mode)
+- Baby piglin replacement
+- Piglin death messages with coords
+- SpeedrunAPI integration for settings
+
+## Not yet implemented
+
+- Piglin pathfinding deadzones (from lava, etc.)
+- Hoglin tweaks
+- Probably more stuff im forgetting
